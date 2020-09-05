@@ -1,0 +1,16 @@
+#!/bin/sh
+vmedaq_gr_stop
+#vmedaq -n 0 1 2 3 4 5 6 7 > /dev/null 2>> $HOME/vmedaq.log
+#vmedaq -n 0 1 2 3 4 5 6 7 > /dev/null
+#vmedaq -n 0 1 2 3 4 5 6 7 >& $HOME/log/vmedaq_gr.log
+#
+#
+#added v1290 for E443@CAGRAF 2015/July
+#vmedaq -n 0 1 2 3 4 5 6 7 8 > /dev/null
+#
+# for e429
+#vmedaq -n 0 1 2 3 4 5 6 7 8 9 > /dev/null 2>> $HOME/vmedaq.log
+#vmedaq -n 0 1 2 3 4 5 6 7 8 9 > /dev/null
+#
+# since 13-APR-2016
+vmedaq -n >& $HOME/log/vmedaq_gr.log

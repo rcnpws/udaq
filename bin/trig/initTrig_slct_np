@@ -1,0 +1,31 @@
+*! Initialize Trigger Circuit nfa
+*select sample,scaler,test output
+*11 Jul 97 by Hidetomo Y.
+*11 Jul 98 by Hidetomo Y.
+*27 Sep 99 by Hidetomo P. Yoshida
+* inittrig_slct_las2l
+
+nfa 13 9 0
+nfa 13 17 0 xd00e
+nfa 13 17 1 xe213
+* 2=event 10(2nd FPP event)
+nfa 14 9 0
+nfa 14 16 1 0
+*GR no Gate InPut
+nfa 14 16 2 1
+*LAS-Single Sampling 1/M=1/1
+nfa 14 17 2 o30
+nfa 15 9 0
+nfa 15 16 1 1
+*2nd level Sampling 1/N=1/1
+nfa 15 17 0 x0321
+nfa 15 17 1 x1414
+nfa 13 1 0
+nfa 13 1 1
+nfa 14 0 1
+nfa 14 1 1
+nfa 14 0 2
+nfa 14 1 2
+nfa 15 0 1
+nfa 15 1 0
+nfa 15 1 1

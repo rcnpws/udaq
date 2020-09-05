@@ -1,0 +1,25 @@
+*! Initialize Trigger Circuit
+
+*changed on 7 Mar 97
+*GR and another event COIN(use J11) Mar 97
+*       
+*/h0/gr/bit/maintrig/Rj11.bit == rj11_t2.bit 
+*/h0/gr/bit/maintrig/Fgrc.bit == fgrc_t2bit 
+*/h0/gr/bit/maintrig/Rgrs.bit == rgrs_t2.bit 
+*/h0/gr/bit/bufch/jbufch.bit == jbufch_1.bit 
+
+*xilinxload 0 13 /h0/gr/bit/maintrig/Rj11.bit -s
+*xilinxload 0 14 /h0/gr/bit/maintrig/Fgrc.bit -s
+*xilinxload 0 15 /h0/gr/bit/maintrig/Rgrs.bit -s
+*xilinxload 0 17 /h0/gr/bit/bufch/jbufch.bit -s
+
+xilinxload 0 13 /h0/gr/bit/maintrig/rj11_t2.bit -s
+xilinxload 0 14 /h0/gr/bit/maintrig/fgrc_t3.bit -s
+xilinxload 0 15 /h0/gr/bit/maintrig/rgrs_t2_0.bit -s
+xilinxload 0 17 /h0/gr/bit/bufch/jbufch_2_vme.bit -s
+
+*initialyze fifo for scalers
+xilinxload 0 16 /h0/gr/bit/fifo/fifo1.bit -s
+*nfa initialize file
+inittrig_slct
+

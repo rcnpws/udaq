@@ -1,0 +1,27 @@
+#!/bin/sh
+#inittrig_slct_gl
+#select sample,scaler,test output
+#changed by Hidetomo Y. on 14 Apr 97
+#changed by Hidetomo P. Y. on 25 May 99
+#changed by Hidetomo P. Y. on 31 May 99
+
+nfa 13 9 0 0
+nfa 13 17 0 0xebd1 0
+nfa 13 17 1 0x6543 0
+nfa 14 9 0 0
+nfa 14 16 1 0 0
+#GR-Single Sampling 1/K=1/0
+nfa 14 16 2 1 0
+#LAS-Single Sampling 1/M=1/1
+nfa 14 17 2 0x3b 0
+nfa 15 9 0 0
+nfa 15 17 0 0xc087 0
+nfa 15 17 1 0x4321 0
+nfa 13 1 0 0
+nfa 13 1 1 0
+nfa 14 0 1 0
+nfa 14 1 1 0
+nfa 14 0 2 0
+nfa 14 1 2 0
+nfa 15 1 0 0
+nfa 15 1 1 0

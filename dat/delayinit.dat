@@ -1,0 +1,30 @@
+; Initialyze CAMAC delay (with program nfaLoop)
+; created 1997.2.21
+; 2002/01/30   modified by  M.Uchida for FORCE54
+;> Wait
+;W 10
+; Set delay gate
+; N x 8ns
+; Set Status Words
+6 16  0  0  0
+6 16  1  0  0
+6 16  2  0  0
+6 16  3  0  0
+6 16  4  0  0
+6 16  5  0  0
+6 16  6  0  0
+6 16  7  0  0
+6 16  8  0  0
+6 16  9  0  0
+6 16 10  0  0
+6 16 11  0  0
+6 16 12  0  0
+6 16 13  0  0
+6 16 14  0  0
+6 16 15  0  0
+; End
+end
+
+
+
+

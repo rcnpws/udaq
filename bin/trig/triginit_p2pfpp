@@ -1,0 +1,27 @@
+*! Initialize Trigger Circuit
+
+*changed at 21 Feb ,97
+*p2p Feb 97
+*xilinxload 0 13 /h0/gr/bit/p2p/rlas_a1.bit -s
+*xilinxload 0 14 /h0/gr/bit/p2p/p2pf_c10.bit -s
+*totyukara  ->                  p2pf_c11.bit
+*xilinxload 0 15 /h0/gr/bit/p2p/p2pr_c2.bit -s
+*xilinxload 0 17 /h0/gr/bit/bufch/bufch_b1.bit -s
+
+*/h0/gr/bit/p2p/Rlas.bit == rlas_a1.bit 
+*/h0/gr/bit/p2p/p2pF.bit == p2pf_c11.bit 
+*/h0/gr/bit/p2p/p2pR.bit == p2pr_c2.bit 
+*/h0/gr/bit/bufch/bufch.bit == bufch_b1.bit 
+
+xilinxload 0 13 /h0/gr/bit/p2p/Rlas.bit -s
+xilinxload 0 14 /h0/gr/bit/p2p/p2pF.bit -s
+xilinxload 0 15 /h0/gr/bit/p2p/p2pR.bit -s
+xilinxload 0 17 /h0/gr/bit/bufch/bufch.bit -s
+nfa 14 9 0
+nfa 14 16 1 1
+nfa 14 16 2 1
+nfa 15 9 0
+nfa 15 16 1 1
+nfa 14 0 1
+nfa 14 0 2
+nfa 15 0 1

@@ -1,0 +1,53 @@
+#!/bin/sh
+# blpinit
+# last changed on 23 FEB 2003 by H.P.Yoshida
+
+# Initialize FERA system
+echo FERA INIT
+ferainit
+sleep 1
+
+# Initialize CFD(LeCroy 3420)
+echo CFD INIT
+cfdinit
+sleep 1
+
+#Initialize DELAY
+echo DELAY INIT
+delayinit
+sleep 1
+
+# Load Bitmap (Buffer Changer)
+
+echo BUFCH INIT
+Xilinxload 0 10 $HOME/udaq/bit/Rblpe2.bit -s
+sleep 1
+
+# 23 FEB 2003
+# Rblpe2.bit == rblpe2c.bit
+
+# Initialize buffer changer
+# buf_size 7424
+
+nfa 10 17 0 0x1d00 0 
+nfa 10 17 1 0x1d00 0 
+nfa 10 1 0 0
+nfa 10 1 1 0
+sleep 1
+
+# Load Bitmap (Divider)
+#echo DIV INIT
+#Xilinxload 0 5 $HOME/udaq/bit/divid2a.bit -s
+# 2007.12.4 A. Tamii the avoe line has been commented out 
+# The module does not exist and I guess we don't need that module.
+#sleep 1
+
+# Load Bitmap (Trigger module)
+echo TRIG INIT
+Xilinxload 0 7 $HOME/udaq/bit/Fblpe5.bit -s
+# Fblpe5.bit == fblpe5bc.bit
+sleep 1
+
+nfa 7  9 0     0 
+nfa 7 16 1 0xa 0 
+nfa 7  0 1     0 

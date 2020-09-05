@@ -1,0 +1,22 @@
+#!/bin/sh
+nfa 30 17 0 2040 0
+echo "setting for output channels\n"
+for slot in 4 8 12 18
+do	
+nfa ${slot} 17 0 0xffff 0
+done
+echo "setting for threshold levels\n"
+for slot in 4 8 12 18
+do
+	for a in `seq 0 15`
+	do
+		nfa ${slot} 16 ${a} 0x64 0
+#		nfa ${slot} 16 ${a} 0xa 0  #until 1st Feb. 0:05
+	done
+done
+echo "setting output width\n"
+for slot in 4 8 12 18
+do
+	nfa ${slot} 18 0 0xf0 0
+	nfa ${slot} 18 1 0xf0 0
+done

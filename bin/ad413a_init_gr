@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ferainit  ${HOME}/udaq/dat/ad413a_init_gr.dat

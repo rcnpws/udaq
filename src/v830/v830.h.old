@@ -1,0 +1,66 @@
+/*
+ *
+ * scaler.h ... CAEN v260 100MHz scaler module access program header
+ * Version 0.01 on 2009.03.18 by A. Tamii
+ *
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <vme/vme.h>
+#include <vme/vme_api.h>
+
+#if 1
+#define V830_ADDR_MODE        VME_A32UD   // VME Addressing Mode = 32bit Addr. non-privileged data access
+#define V830_ADDR_BASE        0xC0C00000  // V830 Scaler Address Base
+#else
+#define V830_ADDR_MODE        VME_A24UD   // VME Addressing Mode = 24bit Addr. non-privileged data access
+#define V830_ADDR_BASE        0x00C00000  // V830 Scaler Address Base
+#endif
+
+
+#define V830_ADDR_INC                 0x00010000    // V830 Scaler Address Increment
+#define V830_ADDR(i_module)           ((V830_ADDR_BASE)+(V830_ADDR_INC)*(i_module))
+
+#define V830_ADDR_SIZE              0x001200    // UIO Address Size (in byte)
+
+typedef struct v830{
+  unsigned long meb[0x400];
+  unsigned long counter[32];
+  unsigned long testreg;
+  unsigned char res01[12];
+  unsigned short testlcntl;
+  unsigned char res02[2];
+  unsigned short testlcnth;
+  unsigned char res03[10];
+  unsigned short testhcntl;
+  unsigned char res04[2];
+  unsigned short testhcnth;
+  unsigned char res05[10];
+  unsigned char res06[0x50];
+  unsigned long channelEnable;
+  unsigned long dwellTime;
+  unsigned short controlRegister;
+  unsigned short bitSetRegister;
+  unsigned short bitClearRegister;
+  unsigned short statusRegister;
+  unsigned short geoRegister;
+  unsigned short interruptLevel;
+  unsigned short interruptVector;
+  unsigned short ADER_32;
+  unsigned short ADER_24;
+  unsigned short enableADER;
+  unsigned short MCSTBaseAddress;
+  unsigned short MCSTControl;
+  unsigned short moduleReset;
+  unsigned short softwareClear;
+  unsigned short softwareTrigger;
+  unsigned short res07;
+  unsigned short triggerCounter;
+  unsigned short res08;
+  unsigned short almostFullLevel;
+  unsigned short res09;
+  unsigned short BLPEventNumber;
+  unsigned short firmware;
+  unsigned short MEBEventNumber;
+} v830_t, *v830_p;

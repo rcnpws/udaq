@@ -1,0 +1,21 @@
+*! Initialize Trigger Circuit CAMAC function 
+*for GR-Single
+*inittrig_slct_grs
+*select sample,scaler,test output
+*changed by Hidetomo Y. on 19 Apr 97
+*changed by Hidetomo Y. on 09 Apr 98
+
+nfa 13 9 0
+nfa 13 17 0 xe001
+nfa 13 17 1 x6543
+nfa 14 9 0
+nfa 14 16 1 1
+* GR-Single Sampling 1/K=1/1
+nfa 15 9 0
+nfa 15 17 0 xce87
+nfa 15 17 1 x4321
+nfa 13 1 0
+nfa 13 1 1
+nfa 14 0 1
+nfa 15 1 0
+nfa 15 1 1

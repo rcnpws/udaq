@@ -1,0 +1,32 @@
+*! Initialize Trigger Circuit nfa
+*inittrig_slct_gl
+*select sample,scaler,test output
+*changed by Hidetomo Y. on 14 Apr 97
+*changed by A. Tamii on 26 Sep 1999 for E138 (n,p)
+
+nfa 13 9 0
+nfa 13 17 0 xea91                 
+nfa 13 17 1 x6543
+nfa 14 9 0
+nfa 14 16 1 0
+*GR-Single Sampling 1/K=1/0
+nfa 14 16 2 1
+*LAS-Single Sampling 1/M=1/1
+nfa 14 17 1 0
+*2x25=50ns coincedence gate width
+nfa 14 17 2 o12
+nfa 15 9 0
+nfa 15 16 1 0
+*LAS 2nd Level  Sampling 1/L=1/0
+nfa 15 17 0 xe321
+*nfa 15 17 0 xce87
+* cf. nfa 15 17 0 xc097
+nfa 15 17 1 x4321
+nfa 13 1 0
+nfa 13 1 1
+nfa 14 0 1
+nfa 14 1 1
+nfa 14 0 2
+nfa 14 1 2
+nfa 15 1 0
+nfa 15 1 1

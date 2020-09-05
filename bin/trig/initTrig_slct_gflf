@@ -1,0 +1,33 @@
+*! Initialize Trigger Circuit nfa
+*select sample,scaler,test output
+*11 Jul 97 by Hidetomo Y.
+*11 Jul 98 by Hidetomo Y.
+*12 Nov 2000 by Hidetomo P. Yoshida
+* inittrig_slct_gflf
+
+nfa 13 9 0
+nfa 13 17 0 xe001
+nfa 13 17 1 xe243
+* 2=event 10(2nd FPP event)
+nfa 14 9 0
+nfa 14 16 1 0
+*GR-Single Sampling 1/K=1/0
+nfa 14 16 2 0
+*LAS-Single Sampling 1/M=1/0
+nfa 14 17 1 13
+*(13+2)x25=375ns coincedence gate width
+nfa 14 17 2 o10
+nfa 15 9 0
+nfa 15 16 1 1
+*2nd level Sampling 1/N=1/1
+nfa 15 17 0 xe007
+nfa 15 17 1 o1100
+nfa 13 1 0
+nfa 13 1 1
+nfa 14 0 1
+nfa 14 1 1
+nfa 14 0 2
+nfa 14 1 2
+nfa 15 0 1
+nfa 15 1 0
+nfa 15 1 1

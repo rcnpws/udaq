@@ -1,0 +1,30 @@
+*! Initialize Trigger Circuit for GR-Single(with 2nd level)
+* triginit_gre
+* data modules are GR-FERA,GR-3377, but can use 2nd level
+* 20-Dec-2000 by Hidetomo P. Y.
+
+* Clear Crate Inhibit
+nfa 30 17 0 0      0
+
+*/h0/gr/bit/maintrig/Rsca.bit == rsca_t1.bit
+*/h0/gr/bit/maintrig/Fgrf.bit == fgrf_t4.bit 
+*/h0/gr/bit/maintrig/Rgre.bit == rgre_t2.bit
+**/h0/gr/bit/bufch/bufch.bit == bufch_b1.bit 
+
+xilinxload 0 13 /h0/gr/bit/maintrig/Rsca.bit -s
+xilinxload 0 14 /h0/gr/bit/maintrig/Fgrf.bit -s
+xilinxload 0 15 /h0/gr/bit/maintrig/Rgre.bit -s
+**xilinxload 0 17 /h0/gr/bit/bufch/bufch.bit -s
+
+*changed on 16-Nov1999 by hidetomo P. Yoshida
+/h0/rcmds/bufchinit
+
+*changed on  21-Feb 1998 by Hidetomo Y.
+*initialyze fifo for scalers
+xilinxload 0 16 /h0/gr/bit/fifo/fifo1.bit -s
+
+*nfa initialize file
+*inittrig_slct
+*changed on  21-Feb 1998 by Hidetomo Y.
+/h0/rcmds/trig/inittrig_slct_gre
+

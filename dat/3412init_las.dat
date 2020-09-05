@@ -1,0 +1,42 @@
+; Initialyze 3412 CAMAC discriminator (with program nfaLoop)
+; created 1999/04/15  T.Kawabata for E110
+; changed 1999/05/20  Hidetomo P. Yoshida for LAS
+; changed 1999/09/25  A. Tamii for E138 (n,p)
+; changed 2000        Hidetomo P. Yoshida for LAS
+; changed 2017.7.11   A. Tamii module positions were changed
+;
+; number of loop
+;1
+;> Wait
+;W 10
+> Clear 3922 Inhibit
+30 17 0 2040 1
+> Set Remote mode
+22 26 0 0 1
+21 26 0 0 1
+> Check Remote/Local mode(Q=1 only if in Remote mode)
+22 27 0 0 1
+21 27 0 0 1
+;> Set threshold(50mV)
+; 22 16 1 173 1
+; 21 16 1 168 1
+> Set threshold(200mV)
+22 16 1 773 1
+21 16 1 768 1
+;> Read threshold(50mV)
+> Read threshold(200mV)
+22 0 1 0 1
+21 0 1 0 1
+> Set width(40ns)
+22 16 2 215 1
+21 16 2 240 1
+> Read width(40ns)
+22 0 2 0 1
+21 0 2 0 1
+> Set Updating mode/Burst guard(No updating/No burst guard)
+22 16 3 0 1
+21 16 3 0 1
+> Reads Updating status(0=No updating/No burst guard)
+22 0 3 0 1
+21 0 3 0 1
+end

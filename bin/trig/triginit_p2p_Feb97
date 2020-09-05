@@ -1,0 +1,35 @@
+*! Initialize Trigger Circuit
+
+* 0POL JAN-97
+* xilinxload 0 14 /h0/gr/bit/0pol/0polf_c3_2.bit -s
+* xilinxload 0 15 /h0/gr/bit/0pol/0polr_c7.bit -s
+* xilinxload 0 16 /h0/gr/bufch/bufch_c1.bit -s
+* nfa 14 9 0
+* nfa 14 16 1 1
+* nfa 14 0 1
+* nfa 15 9 0
+* nfa 15 16 1 0
+* nfa 15 0 1
+
+* P2P FEB-97
+*xilinxload 0 13 /h0/gr/bit/p2p/las_a1.bit -s
+*xilinxload 0 14 /h0/gr/bit/p2p/p2pf_f10.bit -s
+*xilinxload 0 15 /h0/gr/bit/p2p/p2pr_c2.bit -s
+*xilinxload 0 17 /h0/gr/bit/bufch/bufch_b1.bit -s
+*nfa 20 16 0 x000
+*nfa 15 9 0
+*nfa 15 16 1 1
+*nfa 15 0 1
+
+xilinxload 0 13 /h0/gr/bit/p2p/rlas_a1.bit -s
+xilinxload 0 14 /h0/gr/bit/p2p/p2pf_c10.bit -s
+xilinxload 0 15 /h0/gr/bit/p2p/p2pr_c2.bit -s
+xilinxload 0 17 /h0/gr/bit/bufch/bufch_b1.bit -s
+nfa 14 9 0
+nfa 14 16 1 1
+nfa 14 16 2 1
+nfa 15 9 0
+nfa 15 16 1 1
+nfa 14 0 1
+nfa 14 0 2
+nfa 15 0 1

@@ -1,0 +1,39 @@
+*! Initialize Trigger Circuit for GR+FPP+LAS-S
+* triginit_grfpplass
+* gr-fpp or GR single+LAS single
+* 18-Jun 1997 by Hidetomo Y.
+* 21-Feb 1998 by Hidetomo Y.
+* 21-Feb 1998 by Hidetomo Y.
+* 13-May 1998 by Hidetomo Y.
+* 04-Nov 1999 by Hidetomo P. Yoshida
+* 21-Dec 1999 by Hidetomo P. Yoshida
+* 24-Apr 2000 by Hidetomo P. Yoshida
+
+* Clear Crate Inhibit
+nfa 30 17 0 0      0
+
+*/h0/gr/bit/maintrig/Rlf2.bit  == rlf2_t1.bit
+*  2000-04-24
+*/h0/gr/bit/maintrig/Fgfls.bit == fgflst1.bit 
+*  2000-04-24                  == fgflst2.bit 
+*/h0/gr/bit/maintrig/Rgcf.bit  == rgcf_t1.bit 
+*  1999-12-21        Rgcf.bit  == rgcf_t2.bit 
+
+xilinxload 0 13 /h0/gr/bit/maintrig/Rlf2.bit -s
+xilinxload 0 14 /h0/gr/bit/maintrig/Fgfls.bit -s
+xilinxload 0 15 /h0/gr/bit/maintrig/Rgcf.bit -s
+*xilinxload 0 17 /h0/gr/bit/bufch/bufch.bit -s
+
+*changed on 16-Nov1999 by hidetomo P. Yoshida
+/h0/rcmds/bufchinit
+
+*changed on  21-Feb 1998 by Hidetomo Y.
+*initialyze fifo for scalers
+xilinxload 0 16 /h0/gr/bit/fifo/fifo1.bit -s
+
+*nfa initialize file
+*inittrig_slct
+*changed on  21-Feb 1998 by Hidetomo Y.
+/h0/rcmds/trig/inittrig_slct_grfpplass
+
+

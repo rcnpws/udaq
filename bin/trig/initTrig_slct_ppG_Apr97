@@ -1,0 +1,27 @@
+*! Initialize Trigger Circuit nfa
+*initTrig_slct_ppG_Apr97
+*select sample,scaler,test output
+*19 Mar 97 by Hidetomo Y.
+*ppG Mar 97
+*changed at 4 Apr 97
+
+nfa 13 9 0
+nfa 13 17 0 xe001
+nfa 13 17 1 x6543
+nfa 14 9 0
+nfa 14 16 1 0
+nfa 14 16 2 0
+nfa 14 17 1 11
+nfa 14 17 2 xO12
+nfa 15 9 0
+nfa 15 17 0 xc000
+* cf. nfa 15 17 0 xc097
+nfa 15 17 1 x4321
+nfa 13 1 0
+nfa 13 1 1
+nfa 14 0 1
+nfa 14 1 1
+nfa 14 0 2
+nfa 14 1 2
+nfa 15 1 0
+nfa 15 1 1

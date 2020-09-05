@@ -1,0 +1,74 @@
+--------------------------------------------------------------------------
+Board ID             : 0xdead      should be = e725
+Code Revision        : 0xdead [0x0600]                     
+  PCB Revision:      : 13               
+  Firmware Type:     : 14               
+  Code Revision:     : 10.13            
+  Code Date:         : deaddead         
+FIFO Status          : 0xdead [0x0004]                     
+  FLAG: 0 1 2 3      : 1 0 0 1     extra or parity bits 
+  EF:   A B          : 0 1         empty flags            
+  PAE:  A B          : 1 1         partially empty flags  
+  HF:   A B          : 1 1         harf full               
+  FFIR: A B          : 1 0         full flag or input ready
+  DAV:               : 1           DAV
+Hardware Status      : 0xdead [0x0020]                     
+  STAT: 0 1          : 1 0         non-SerDes LVDS lines    
+  SD_LOCK:           : 1           SerDes LOCK* (active low) 
+  SD_SM_LOCK:        : 1           SerDes State Machine Lock 
+  SD_SM_LST_LK:      : 1           SerDes State Machine Lost Lock 
+  UNQ_SM_LCK:        : 1           SerDes Unqualified State Machine Lock 
+  SYNC:              : 0           SerDes SYNC command 
+  ISYNC:             : 1           SerDes Imperial SYNC command 
+  DCM_LOCK:          : 0           Digital Clock Manager Logic Lock 
+  DCM_STATUS:        : 10          Digital Clock Manager Logic Status 
+  CNTR_ERROR:        : 1           Counter Error 
+FIFO Control         : 0xdead [0x040e]                     
+  FLAG: 0 1 2 3      : 1 0 1 1     extra or parity input    
+  BE/LE:             : 0           Little endian    
+  FWFT/SI:           : 1           First-Word-Fall-Thru FIFO Mode
+NIM Input Status     : 0xdead [0x0700]                     
+Gating Register      : 0xdead [0x0702]                     
+  TRIG_IN_SEL:       : 1         = ECL    
+  INT_MUX: A B       : 1 1         internal logic analyzer selection  
+  FORCE_FIFO:        : 0         = No  
+  TS_LATCH_SOURCE:   : 1         = Local detector trigger  
+ECL-A Input Status   : 0xdead [0x0704]                     
+ECL-B Input Status   : 0xdead    [0x0706]                     
+Latched Time Stamp   : 0xdead-dead-dead   [0x0714] = 02448383.46645165 sec 
+Live Time Stamp      : 0xdead-dead-dead   [0x0708] = 02448383.46645165 sec 
+Coin. Window Delay   : 0xdead [0x0710] = 57005x10 nsec         
+Coin. Window Width   : 0xdead [0x0712] = 57005x10 nsec         
+TS Error Counter Ctrl: 0xdead 0xdead [0x071a]                     
+  RESET:             : 1         = Yes    
+  MODE:              : 0         = Rate    
+  INHIBIT:           : 1         = Yes    
+  Rate Period:       : 57005         x 10 nsec  
+TS Error Counter     : 0xdeaddead [0x071e]                     
+Trigger Time Offset  : 0xdead [0x0722] = 57005x10 nsec         
+Miss Trig Count      : 0xdead [0x0724]                     
+Miss Trig Count TS   : 0xdead [0x0726]                     
+TS Propagation Ctrl  : 0xdead [0x0728]                     
+  DES:               : 0x56              
+  SYNC:              : 1         = Yes    
+FIFO Counter         : 0xdead [0x07ec]  = 57005       
+Trig Counter         : 0xdead [0x07f0]  = 57005       
+User Counter NIM-0   : 0xdead [0x07f2]  = 57005       
+User Counter NIM-1   : 0xdead [0x07f4]  = 57005       
+User Counter NIM-2   : 0xdead [0x07f6]  = 57005       
+User Counter NIM-3   : 0xdead [0x07f8]  = 57005       
+User Counter NIM-4   : 0xdead [0x07fa]  = 57005       
+User Counter NIM-5   : 0xdead [0x07fc]  = 57005       
+User Counter NIM-6   : 0xdead [0x07fe]  = 57005       
+User Counter NIM-7   : 0xdead [0x0800]  = 57005       
+SerDes Config        : 0xdead 0xdead [0x0848]  Serializer/Deserializer      
+  DEN:               : 1           SerDes DEN
+  REN:               : 0           SerDes REN
+  LINE LE:           : 1           SerDes Diagnostic Loop for Line 
+  LOC LE:            : 1           SerDes Diagnostic Loop for Local
+  SYNC:              : 0           SerDes Ignore TX
+  T PWR*:            : 1           SerDes Transmitter Power
+  R PWR*:            : 0           SerDes Receiver Power
+  SL:                : 1           SerDes Stringent Lock for Monitoring Errs
+  CLK SEL:           : 1           Local Board Oscillator Clock
+--------------------------------------------------------------------------

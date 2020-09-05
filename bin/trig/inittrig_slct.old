@@ -1,0 +1,32 @@
+*! Initialize Trigger Circuit nfa
+* initTrig_slct_grj11
+*select sample,scaler,test output
+*changed on 5 Mar 97
+*           14 Jan 98
+*GR and another event COIN(J11) 
+
+nfa 13 9 0
+nfa 13 17 0 xa871
+*nfa 13 17 0 xe321
+nfa 13 17 1 x6543
+nfa 14 9 0
+nfa 14 16 1 1
+* GR-S Sampling 1/K K = 1
+nfa 14 16 2 0
+* j11 event Sampling 1/M(M=0) for check
+* M=0: normal run state
+nfa 14 17 0 2
+nfa 14 17 1 24
+* delay ~100ns, gate ~650ns
+nfa 15 9 0
+*nfa 15 17 0 xc321
+nfa 15 17 0 xc879
+nfa 15 17 1 x4321
+nfa 13 1 0
+nfa 13 1 1
+nfa 14 0 1
+nfa 14 0 2
+nfa 14 1 0
+nfa 14 1 1
+nfa 15 1 0
+nfa 15 1 1

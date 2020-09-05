@@ -1,0 +1,32 @@
+*! Initialize Trigger Circuit
+* triginit_gf2 << triginit_gfl
+*11-Jul 1997 by Hidetomo Y.
+*11-Jul 1998 by Hidetomo Y.
+*17-DEC 1998 by Hidetomo Y.
+*20-Jul 1999 by Hidetomo P. Yoshida
+*26-Sep 1999 by A. Tamii for E138 (n,p)
+* GR + LAS 2nd level
+
+*/h0/gr/bit/maintrig/Rlas.bit == rlas_t2.bit 
+*/h0/gr/bit/maintrig/fgl2_t1.bit fgl2_t1.bit 
+*/h0/gr/bit/maintrig/Rfpp.bit == rfpp_t3.bit 
+*                    Rgcf.bit == rgcf_t1.bit 
+*                    Rgre.bit == rgre_t2.bit 
+*/h0/gr/bit/bufch/bufch.bit == bufch_b1.bit 
+*                           == bufch3d.bit 
+
+xilinxload 0 13 /h0/gr/bit/maintrig/Rlas.bit -s
+xilinxload 0 14 /h0/gr/bit/maintrig/Fgl2_t1.bit -s
+xilinxload 0 15 /h0/gr/bit/maintrig/Rgre.bit -s
+xilinxload 0 17 /h0/gr/bit/bufch/bufch.bit -s
+
+*changed on  11-Jul 1998 by Hidetomo Y.
+*initialyze fifo for scalers
+xilinxload 0 16 /h0/gr/bit/fifo/fifo1.bit -s
+
+*nfa initialize file
+/h0/rcmds/initbufch_nfa
+*inittrig_slct
+*changed on  11-Jul 1998 by Hidetomo Y.
+/h0/rcmds/trig/inittrig_slct_gl2l
+

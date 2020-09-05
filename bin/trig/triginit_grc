@@ -1,0 +1,44 @@
+#!/bin/sh
+#! Initialize Trigger Circuit for GR-Coin
+# triginit_grc
+# 19-Jan 2001 by Hidetomo P. Yoshida
+# 07-Apr 2001 by Hidetomo P. Yoshida
+
+# Clear Crate Inhibit
+nfa 30 17 0 0      0
+
+#/h0/gr/bit/maintrig/Rcf2.bit == rcf2_t1.bit
+# 19-Jan 2001                 == rcf2_t2.bit
+# 07-Apr 2001                 == rcf2_t3.bit
+#/h0/gr/bit/maintrig/Fgrc.bit == fgrc_t4.bit 
+# 19-Jan 2001                 == fgrc_t5.bit 
+# 07-Apr 2001                 == fgrc_t6.bit 
+#/h0/gr/bit/maintrig/Rgri.bit == rgri_t1.bit 
+#/h0/gr/bit/bufch/bufch.bit == bufch_b1.bit 
+#            1999           == bufch3d.bit 
+
+Xilinxload 0 13 ${HOME}/udaq/bit/gr/maintrig/Rcf2.bit -s
+Xilinxload 0 14 ${HOME}/udaq/bit/gr/maintrig/Fgrc.bit -s
+Xilinxload 0 15 ${HOME}/udaq/bit/gr/maintrig/Rgri.bit -s
+
+#changed on 16-Nov 1999 by hidetomo P. Yoshida
+#changed on 07-Apr 2001 by hidetomo P. Yoshida
+${HOME}/udaq/bin/trig/bufchinit_gr
+
+#changed on  21-Feb 1998 by Hidetomo Y.
+#initialyze fifo for scalers
+Xilinxload 0 16 ${HOME}/udaq/bit/gr/fifo/fifo1.bit -s
+
+#nfa initialize file
+#inittrig_slct
+#changed on  20-Jan 2001 by Hidetomo Y.
+#changed on  07-Apr 2001 by Hidetomo Y.
+${HOME}/udaq/bin/trig/inittrig_slct_grc
+
+
+
+
+
+
+
+

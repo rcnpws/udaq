@@ -1,0 +1,18 @@
+*! Initialize Trigger Circuit for GR-Single
+* triginit_grs 
+*19-Apr 1997 by Hidetomo Y.
+
+*/h0/gr/bit/maintrig/Rlas.bit == rlas_t1.bit 
+*   22 Apr 97         Rsca.bit == rsca_t1.bit
+*/h0/gr/bit/maintrig/Fgrs.bit == fgrs_t1.bit 
+*/h0/gr/bit/maintrig/Rgrs.bit == rgrs_t2.bit 
+*/h0/gr/bit/bufch/bufch.bit == bufch_1.bit 
+
+xilinxload 0 13 /h0/gr/bit/maintrig/Rsca.bit -s
+xilinxload 0 14 /h0/gr/bit/maintrig/Fgrs.bit -s
+xilinxload 0 15 /h0/gr/bit/maintrig/Rgrs.bit -s
+xilinxload 0 17 /h0/gr/bit/bufch/bufch.bit -s
+
+*nfa initialize file
+inittrig_slct
+

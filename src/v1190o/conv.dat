@@ -1,0 +1,59 @@
+Module Number: 0
+Event Count: 0x00000002(2)
+0000: 4000003f
+  Global Header
+    id:          08(8)
+    event count: 000001(1)
+    geo:         1f(31)
+0004: 08001e9c
+  TDC Header
+    tdc:         0(0)
+    event id:    001(1)
+    bunch id:    e9c(3740)
+0008: 0006a9f7
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     00(0)
+    measurement: 6a9f7(436727)
+000c: 18001003
+  TDC Trailer
+    tdc:         0(0)
+    event_id:    001(1)
+    word_count:  003(3)
+0010: 09001e9c
+  TDC Header
+    tdc:         1(1)
+    event id:    001(1)
+    bunch id:    e9c(3740)
+0014: 19001002
+  TDC Trailer
+    tdc:         1(1)
+    event_id:    001(1)
+    word_count:  002(2)
+0018: 0a001e9c
+  TDC Header
+    tdc:         2(2)
+    event id:    001(1)
+    bunch id:    e9c(3740)
+001c: 1a001002
+  TDC Trailer
+    tdc:         2(2)
+    event_id:    001(1)
+    word_count:  002(2)
+0020: 0b001e9c
+  TDC Header
+    tdc:         3(3)
+    event id:    001(1)
+    bunch id:    e9c(3740)
+0024: 1b001002
+  TDC Trailer
+    tdc:         3(3)
+    event_id:    001(1)
+    word_count:  002(2)
+0028: 8000017f
+  Global Trailer
+    status:      0(0)
+    word count:  00000b(11)
+    geo:         1f(31)
+002c: c0000000
+  Filler

@@ -1,0 +1,47 @@
+#!/bin/sh
+# Initialyze LAS FERA
+# changed 1999/05/20 Hidetomo P. Yoshida for discri.
+# changed 1999/09/24 A. Tamii for E128 (n,p)
+# changed 1999/10/19 Hidetomo P. Yoshida 
+# changed 1999/11/04 Hidetomo P. Yoshida 
+# changed 2005/05/29 Hidetomo P. Yoshida 
+#         argument $1=0 for no 3420 CFD 
+
+# discri initialize
+ferainit  ${HOME}/udaq/dat/3412init_las.dat
+
+if [ "$1" = "" ]
+then
+  # CFD initialize
+  ferainit  ${HOME}/udaq/dat/cfdinit_las_fera.dat
+else 
+  FLAG=$1
+  if [ $FLAG -eq 0 ]
+  then
+    echo $FLAG
+  fi
+fi
+
+
+ferainit  ${HOME}/udaq/dat/ferainit_las.dat
+
+# Set FERA Pedestral Values
+ferainit  ${HOME}/udaq/dat/fera_pede_las.dat
+
+# Initialyze FCET for FERA
+#  xilinxload 0 19 /h0/gr/bit/fcet/fcet_fera.bit -s
+#  xlinxdown 0 19 /h0/gr/bit/fcet/fcet_fera.bit -s
+#  xilinxload 0 19 /h0/gr/bit/fcet/fcet_fera.bit -s
+#  xilinxload 0 21 /h0/gr/bit/fcet/fcet_fera.bit -s
+#Xilinxload 1 21 ${HOME}/udaq/bit/fcet/fcet_fera.bit -s
+Xilinxload 1 21 ${HOME}/udaq/bit/fcet/fcet_fera.bit -s
+  
+#  k2917reset
+
+nfa 21  9 0 1
+nfa 21 16 1 0xcccc 1
+nfa 21  0 1 1
+nfa 21  0 2 1
+nfa 21  0 3 1
+
+

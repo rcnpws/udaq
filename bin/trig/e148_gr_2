@@ -1,0 +1,13 @@
+/h0/rcmds/trig/triginit_grc
+
+nfa 14 16 2 0
+nfa 14 16 1 0
+nfa 15 16 1 1
+nfa 13 17 1 x0408
+nfa 13 17 4 x0181
+nfa 14 0 2 
+nfa 14 0 1
+nfa 15 0 1
+nfa 13 1 1
+nfa 13 1 4
+

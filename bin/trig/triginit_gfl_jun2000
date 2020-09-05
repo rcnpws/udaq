@@ -1,0 +1,35 @@
+*! Initialize Trigger Circuit
+* triginit_gfl
+*11-Jul 1997 by Hidetomo Y.
+*11-Jul 1998 by Hidetomo Y.
+*19-Dec 1999 by Hidetomo P. Y.
+*20-Jun 2000 by Hidetomo P. Y.
+* GR + FPP + LAS
+
+* Clear Crate Inhibit
+nfa 30 17 0 0      0
+
+*/h0/gr/bit/maintrig/Rlas.bit == rlas_t2.bit 
+*/h0/gr/bit/maintrig/Fgfl.bit == fgfl_t3.bit 
+*   20-Jun 2000               == fgfl_t5.bit 
+*/h0/gr/bit/maintrig/Rgcf.bit == rgcf_t2.bit
+*   20-Jun 2000
+**/h0/gr/bit/bufch/bufch.bit == bufch_b1.bit 
+
+xilinxload 0 13 /h0/gr/bit/maintrig/Rlas.bit -s
+xilinxload 0 14 /h0/gr/bit/maintrig/Fgfl.bit -s
+xilinxload 0 15 /h0/gr/bit/maintrig/Rgcf.bit -s
+**xilinxload 0 17 /h0/gr/bit/bufch/bufch.bit -s
+
+*changed on 16-Nov1999 by hidetomo P. Yoshida
+/h0/rcmds/bufchinit
+
+*changed on  11-Jul 1998 by Hidetomo Y.
+*initialyze fifo for scalers
+xilinxload 0 16 /h0/gr/bit/fifo/fifo1.bit -s
+
+*nfa initialize file
+*inittrig_slct
+*changed on  11-Jul 1998 by Hidetomo Y.
+/h0/rcmds/trig/inittrig_slct_gfl
+

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# stop the existing process
+vmedaq_las_stop
+
+# start DAQ
+vmedaq -n >& $HOME/log/vmedaq_las.log

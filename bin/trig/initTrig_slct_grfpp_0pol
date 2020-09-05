@@ -1,0 +1,32 @@
+*! Initialize Trigger Circuit CAMAC function 
+* for GR-FPP
+*inittrig_slct_grfpp
+*select sampling ratio, scaler, test output
+*changed by Hidetomo Y. on 18 Jun 97
+*changed by Hidetomo Y. on 18 Jun 97
+
+nfa 13 9 0
+nfa 13 17 0 xe321
+nfa 13 17 1 x6543
+nfa 14 9 0
+nfa 14 16 1 10
+*GR-Single Sampling 1/K=1/10
+*nfa 14 17 3 b0001
+* standerd FPP, not use joker scinti.
+*nfa 14 17 3 b0000
+*  use joker scinti.
+nfa 14 17 3 b1001
+* 0-pol, not use y Hodoscope
+nfa 15 9 0
+nfa 15 16 1 0
+*2nd level Sampling 1/N=1/0
+nfa 15 17 0 xe321
+nfa 15 17 1 o1100
+nfa 13 1 0
+nfa 13 1 1
+nfa 14 0 1
+nfa 14 1 3
+nfa 15 0 1
+nfa 15 1 0
+nfa 15 1 1
+

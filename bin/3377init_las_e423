@@ -1,0 +1,61 @@
+#!/bin/sh
+# 3377init
+# Initialyze FCET for 3377
+# 
+#   xlinxdown 6 18 /h0/gr/bit/fcet/fcet_fera.bit <=vme01
+#
+#  2015/05/14  J. Zenihiro Leading & Trailing mode
+#  2002/12/19  H.P.Yoshida for FORCE54
+
+echo FCET INIT
+Xilinxload 6 18 $HOME/udaq/bit/fcet/fcet_fera.bit -s
+
+  nfa 18 9 0 6
+  nfa 18 16 1 0xbbbb 6
+sleep 1
+  nfa 18 0 1 6
+  nfa 18 0 2 6
+  nfa 18 0 3 6
+sleep 2
+
+echo Initialyze 3377
+#init3377_las -y
+init3377_las_e423 -y
+# changed on 2nd JUN 2008 by H.P.Yoshida
+
+# # or 
+# echo ""
+# echo Crate 7
+# echo INIT LAS Rear  VDC X2
+# echo init3377_las_x2 -y
+# echo ""
+# 
+# sleep 2
+# init3377_las_x2 -y
+# 
+# echo ""
+# echo INIT LAS Rear  VDC U2
+# echo init3377_las_u2 -y
+# echo ""
+# 
+# sleep 2
+# init3377_las_u2 -y
+# 
+# echo ""
+# echo Crate 6
+# echo INIT LAS Front VDC U1
+# echo init3377_las_x1 -y
+# echo ""
+# 
+# sleep 2
+# init3377_las_x1 -y
+# 
+# echo ""
+# echo INIT LAS Front VDC X1
+# echo init3377_las_u1 -y
+# echo ""
+# 
+# sleep 2
+# init3377_las_u1 -y
+
+echo Finish!

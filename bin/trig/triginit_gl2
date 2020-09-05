@@ -1,0 +1,30 @@
+#!/bin/sh
+#! Initialize Trigger Circuit
+# triginit_gf2 << triginit_gfl
+#11-Jul 1997 by Hidetomo Y.
+#11-Jul 1998 by Hidetomo Y.
+#17-DEC 1998 by Hidetomo Y.
+# GR + LAS 2nd level
+# Clear Crate Inhibit
+nfa 30 17 0 0  0    
+
+#/h0/gr/bit/maintrig/Rlas.bit == rlas_t2.bit 
+#/h0/gr/bit/maintrig/fgf2_t1.bit fgf2_t1.bit 
+#/h0/gr/bit/maintrig/Rfpp.bit == rfpp_t3.bit 
+#/h0/gr/bit/bufch/bufch.bit == bufch_b1.bit 
+
+Xilinxload 0 13 ${HOME}/udaq/bit/gr/maintrig/Rlas.bit -s
+Xilinxload 0 14 ${HOME}/udaq/bit/gr/maintrig/fgl2_t1.bit -s
+Xilinxload 0 15 ${HOME}/udaq/bit/gr/maintrig/Rfpp.bit -s
+
+${HOME}/udaq/bin/trig/bufchinit_gr
+
+#changed on  11-Jul 1998 by Hidetomo Y.
+#initialyze fifo for scalers
+Xilinxload 0 16 ${HOME}/udaq/bit/gr/fifo/fifo1.bit -s
+
+#nfa initialize file
+#inittrig_slct
+#changed on  11-Jul 1998 by Hidetomo Y.
+${HOME}/udaq/bin/trig/inittrig_slct_gl2
+

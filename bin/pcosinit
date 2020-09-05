@@ -1,0 +1,155 @@
+#!/usr/bin/perl
+#
+# Initialize PCOS of GR-FPP
+#
+#   Ver1.0  2006.04.07 by A. Tamii for E154
+
+# --- Commands ---
+$PCOS_THR  ="pcos_threshold";
+$PCOS_ADDR ="pcos_setaddress";
+$PCOS_DELAY="pcos_delay";
+
+# --- RDTM Crate and Station ---
+$C_RDTM=0;
+#$N_RDTM=18;  # RDTM
+$N_RDTM=22;  # LR4299
+
+
+# --- Set Logical Addresses ---
+  # X1
+  for($i=1;$i<=13;$i++){
+     set_address(0, $i, 0x000+($i-1));
+  }
+  # X2
+  set_address(1, 1, 0x08F);
+  for($i=2;$i<=13;$i++){
+#    set_address(1, $i, 0x080+($i-1));
+     set_address(1, $i, 0x080+($i-2));
+  }
+  # U3
+  for($i=1;$i<=18;$i++){
+     if($i<=16){
+        set_address(2, $i, 0x0c2+($i-1));
+     }else{
+        set_address(2, $i, 0x0c0+($i-17));
+     }
+  }
+  # V3
+  for($i=1;$i<=18;$i++){
+     set_address(3, $i, 0x142+($i-1));
+  }
+  # U4
+  for($i=1;$i<=22;$i++){
+     set_address(4, $i, 0x0e0+($i-1));
+  }
+  # V4
+  for($i=1;$i<=22;$i++){
+     set_address(5, $i, 0x160+($i-1));
+  }
+
+
+# --- Set Thresholds ---
+  # X1
+  for($i=1;$i<=13;$i++){
+     set_threshold(0,$i,7.000);
+  }
+  for($i=1;$i<=13;$i++){
+#     set_threshold(0,$i,5.000);
+     set_threshold(0,$i,7.000);
+  }
+  # X2
+  for($i=1;$i<=13;$i++){
+     set_threshold(1,$i,7.000);
+  }
+#  for($i=1;$i<=13;$i++){
+#     set_threshold(1,$i,5.000);
+#  }
+  # U3
+  for($i=1;$i<=18;$i++){
+     set_threshold(2,$i,7.000);
+  }
+#  for($i=1;$i<=18;$i++){
+#     set_threshold(2,$i,3.500);
+#  }
+  # V3
+  for($i=1;$i<=18;$i++){
+     set_threshold(3,$i,7.000);
+  }
+#  for($i=1;$i<=18;$i++){
+#     set_threshold(3,$i,3.500);
+#  }
+  # U4
+  for($i=1;$i<=22;$i++){
+     set_threshold(4,$i,7.000);
+  }
+#  for($i=1;$i<=22;$i++){
+#     set_threshold(4,$i,5.000);
+#  }
+  set_threshold(4,13,7.000);
+  # V4
+  for($i=1;$i<=22;$i++){
+     set_threshold(5,$i,7.000);
+  }
+#  for($i=1;$i<=22;$i++){
+#     set_threshold(5,$i,5.000);
+#  }
+
+# --- Set Delay ---
+  # X1
+  for($i=1;$i<=13;$i++){
+    set_delay(0,$i,600.0);
+  }
+  # X2
+  for($i=1;$i<=13;$i++){
+    set_delay(1,$i,600.0);
+  }
+  # U3
+  for($i=1;$i<=18;$i++){
+    set_delay(2,$i,600.0);
+  }
+  # V3
+  for($i=1;$i<=18;$i++){
+    set_delay(3,$i,600.0);
+  }
+  # U4
+  for($i=1;$i<=22;$i++){
+    set_delay(4,$i,600.0);
+  }
+  # V4
+  for($i=1;$i<=22;$i++){
+    set_delay(5,$i,600.0);
+  }
+
+#-----------------------------------------------------------
+# subroutine set_thoreshold
+# args ... pcos_number, LeCroy2731_Station, Threshold (V) 
+#-----------------------------------------------------------
+
+sub set_threshold {
+  my($pcos,$n,$thr) = @_;
+  system($PCOS_THR, $C_RDTM, $N_RDTM, $pcos, $n, $thr);
+}
+
+
+#-----------------------------------------------------------
+# subroutine set_address
+# args ... pcos_number, LeCroy2731_Station, address
+#-----------------------------------------------------------
+
+sub set_address {
+  my($pcos,$n,$addr) = @_;
+  system($PCOS_ADDR, $C_RDTM, $N_RDTM, $pcos, $n, $addr);
+}
+
+
+#-----------------------------------------------------------
+# subroutine set_delay
+# args ... pcos_number, LeCroy2731_Station, delay
+#-----------------------------------------------------------
+
+sub set_delay {
+  my($pcos,$n,$delay) = @_;
+  system($PCOS_DELAY, $C_RDTM, $N_RDTM, $pcos, $n, $delay);
+}
+
+

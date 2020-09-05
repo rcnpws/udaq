@@ -1,0 +1,26 @@
+#!/bin/sh
+#*inittrig_slct_grs
+#*select sample,scaler,test output
+#*changed by Hidetomo Y. on 19 Apr 97
+#*changed by Hidetomo Y. on 09 Apr 98
+#*changed by Hidetomo Y. on 04 Apr 99
+
+nfa 13 9 0 0
+nfa 13 17 0 0xefc1 0
+nfa 13 17 1 0x6543 0
+nfa 14 9 0 0
+nfa 14 16 1 1 0
+# GR-Single Sampling 1/K=1/1
+nfa 14 17 3 b1110 0
+#* standerd FP, not use joker scinti.
+#nfa 14 17 3 b1100 
+#*  use joker 
+nfa 15 9 0 0
+nfa 15 17 0 0xce87 0
+nfa 15 17 1 0x4321 0
+nfa 13 1 0 0
+nfa 13 1 1 0
+nfa 14 0 1 0
+nfa 15 1 0 0
+nfa 15 1 1 0
+

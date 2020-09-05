@@ -1,0 +1,7 @@
+#!/bin/sh
+
+#for E396
+#ferainit  ${HOME}/udaq/dat/ferainit_gr_pede0.dat
+#for E375
+ferainit  ${HOME}/udaq/dat/ferainit_gr_e375.dat
+

@@ -1,0 +1,8 @@
+#!/bin/sh
+# initialize V1190 & MADC32 for SSD
+#
+# for E404
+vmedaq -i 0
+madc32_init 0
+madc32_init 1
+madc32_init 2

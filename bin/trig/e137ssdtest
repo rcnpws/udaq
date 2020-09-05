@@ -1,0 +1,13 @@
+*  by H.P.Yoshida on 28th APR 2000
+*  for SSD test of E137
+  nfa 14 17 3 b1111 0
+* only GR1(Scinti.1) input use
+  nfa 15 16 1 10 0
+* 2nd level sampling 1/10  
+  nfa 14 1 3 0
+  nfa 15 0 1 0
+
+
+
+
+

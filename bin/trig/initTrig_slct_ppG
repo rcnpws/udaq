@@ -1,0 +1,24 @@
+*! Initialize Trigger Circuit nfa
+*select sample,scaler,test output
+*19 Mar 97 by Hidetomo Y.
+*ppG Mar 97
+
+nfa 13 9 0
+nfa 13 17 0 xe001
+nfa 13 17 1 x6543
+nfa 14 9 0
+nfa 14 16 1 0
+nfa 14 16 2 0
+nfa 14 17 1 11
+nfa 14 17 2 0
+nfa 15 9 0
+nfa 15 17 0 xc000
+nfa 15 17 1 x4321
+nfa 13 1 0
+nfa 13 1 1
+nfa 14 0 1
+nfa 14 1 1
+nfa 14 0 2
+nfa 14 1 2
+nfa 15 1 0
+nfa 15 1 1

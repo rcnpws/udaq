@@ -1,0 +1,12 @@
+#!/bin/sh
+
+ferainit  ${HOME}/udaq/dat/ferainit_gr_e308.dat
+
+Xilinxload 0 11 ${HOME}/udaq/bit/fcet/fcet_fera.bit -s
+  
+nfa 11 9 0 0
+nfa 11 16 1 0xcccc 0
+nfa 11 0 1 0
+nfa 11 0 2 0 
+nfa 11 0 3 0
+

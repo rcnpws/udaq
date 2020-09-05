@@ -1,0 +1,14 @@
+* H.P.Yoshdia on 14th MAR 2002
+* export FERA : 2
+* Both trigger own Timing
+nfa 14 16 2 0
+nfa 14 16 1 0
+nfa 15 16 1 1
+nfa 13 17 1 x3808
+nfa 13 17 4 x0101
+nfa 14 0 2 
+nfa 14 0 1
+nfa 15 0 1
+nfa 13 1 1
+nfa 13 1 4
+

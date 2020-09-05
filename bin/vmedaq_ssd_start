@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# stop the existing process
+vmedaq_ssd_stop
+
+# start a vmedaq process with one V1190A and three MADC32
+#vmedaq -n -v 0 -m 0 1 2 > /dev/null
+#vmedaq -n -v 0 -m 0 1 2 >& $HOME/log/vmedaq_ssd.log
+# since 13-APR-2016
+vmedaq -n >& $HOME/log/vmedaq_ssd.log

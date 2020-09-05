@@ -1,0 +1,53 @@
+#!/bin/sh
+#! Initialize Trigger Circuit nfa
+#inittrig_slct_glc
+#changed by Hidetomo P. Yoshida on 07 Apr 2001
+
+nfa 13 9 0 0
+nfa 13 17 0 0xe001 0
+nfa 13 17 1 0x008e 0
+#nfa 13 17 1 0x068e 0
+# xABCD
+# C=LAS,B=FERA3,D=FERA1
+# LAS timing ==8,GR timing==6,SSD timing==e
+nfa 13 17 3 0x000f 0
+# nfa 13 17 3 0xABCD
+# xAB for coin gate delay
+# remark:gate is about 800ns(fix)
+# But top bit : 0=>GR timing 1=>LAS timing
+# xCD for FERA3 FC delay 15 x 100 = 1500ns
+#nfa 13 17 4 0x0110 0
+# at 31 OCT 2008 changed:nfa 13 17 4 
+nfa 13 17 4 0x8110 0
+#nfa 13 17 4 0x0180 0
+# nfa 13 17 4 bABCDEFGHIJKLMNOP 
+# !P==LAS,!L==FERA1,!D==FERA3 busy is on
+# I==FERA1 gate : GR timing
+# nfa 13 17 4 0x1110
+# only LAS busy is on and FERA1-3 busy off
+# A: FERA busy with GR busy
+# because of for GR-LAS coincidence gate 
+nfa 14 9 0 0
+nfa 14 16 1 0 0
+#GR-Single Sampling 1/K=1/0
+nfa 14 16 2 0 0
+#LAS-Single Sampling 1/M=1/0
+nfa 14 17 1 23 0
+#(23+2)x25=625ns coincedence gate width
+#nfa 14 17 2 0e2 0
+#nfa 14 17 2 0x62 0 ; 0 8sin
+nfa 14 17 2 062 0
+nfa 15 9 0 0
+nfa 15 17 0 0xc000 0
+nfa 15 17 1 0x4321 0
+nfa 13 1 0 0
+nfa 13 1 1 0
+nfa 13 1 3 0
+nfa 13 1 4 0
+nfa 14 0 1 0
+nfa 14 1 1 0
+nfa 14 0 2 0
+nfa 14 1 2 0
+nfa 15 1 0 0
+nfa 15 1 1 0
+

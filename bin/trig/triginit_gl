@@ -1,0 +1,40 @@
+#!/bin/sh
+#!! Initialize Trigger Circuit
+# triginit_gl
+#19-Mar 1997 by Hidetomo Y.
+#11-Jul 1998 by Hidetomo Y.
+
+# Clear Crate Inhibit
+nfa 30 17 0 0    0
+
+#xilinxload 0 13 /h0/gr/bit/p2p/rlas_a1.bit -s
+#xilinxload 0 14 /h0/gr/bit/p2p/p2pf_c10.bit -s
+#xilinxload 0 15 /h0/gr/bit/p2p/p2pr_c2.bit -s
+#xilinxload 0 17 /h0/gr/bit/bufch/bufch_b1.bit -s
+
+#/h0/gr/bit/maintrig/Rlas.bit == rlas_t1.bit 
+# 11 Jul 98                   == rlas_t2.bit 
+#/h0/gr/bit/maintrig/Fgl.bit == fgl_t1.bit 
+#  4 Apr 97                   == fgl_t2.bit
+# 11 Jul 98                   == fgl_t3.bit
+#/h0/gr/bit/maintrig/Rgrs.bit == rgrs_t2.bit 
+#/h0/gr/bit/bufch/bufch.bit == bufch_1.bit 
+# 20 Jul 99                 == bufch3d.bit 
+# change for bufch 17 Nov 1999
+
+Xilinxload 0 13 ${HOME}/udaq/bit/gr/maintrig/Rlas.bit -s
+Xilinxload 0 14 ${HOME}/udaq/bit/gr/maintrig/Fgl.bit -s
+Xilinxload 0 15 ${HOME}/udaq/bit/gr/maintrig/Rgrs.bit -s
+
+#xilinxload 0 17 ${HOME}/udaq/bit/gr/bufch/bufch.bit -s
+#changed on  10-Mar 1998 by Hidetomo Y.
+#initbufch_nfa
+${HOME}/udaq/bin/trig/bufchinit_gr
+
+#initialyze fifo for scalers
+Xilinxload 0 16 ${HOME}/udaq/bit/gr/fifo/fifo1.bit -s
+
+#nfa initialize file
+${HOME}/udaq/bin/trig/inittrig_slct_gl
+
+

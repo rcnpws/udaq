@@ -1,0 +1,26 @@
+*! Initialize Trigger Circuit
+
+*changed on 7 Mar 97
+*GR and SSD COIN Mar 97
+
+*/h0/gr/bit/maintrig/Rj11.bit == rj11_t2.bit 
+*/h0/gr/bit/maintrig/Fgrc.bit == fgrc_t1.bit 
+*/h0/gr/bit/maintrig/Rgrs.bit == rgrs_t2.bit 
+*/h0/gr/bit/bufch/jbufch.bit == jbufch_1.bit 
+
+xilinxload 0 13 /h0/gr/bit/maintrig/Rj11.bit -s
+xilinxload 0 14 /h0/gr/bit/maintrig/Fgrc.bit -s
+xilinxload 0 15 /h0/gr/bit/maintrig/rgrs_t1.bit -s
+xilinxload 0 17 /h0/gr/bit/bufch/jbufch.bit -s
+
+*nfa 14 9 0
+*nfa 14 16 1 1
+*nfa 14 17 0 0
+*nfa 14 17 1 18
+*nfa 14 0 1
+*nfa 14 1 0
+*nfa 14 1 1
+
+*nfa initialize file
+inittrig_slct
+

@@ -1,0 +1,28 @@
+CC=gcc
+LD=gcc
+
+HDIR=../../include
+
+CFLAGS = -O0 -Wall -I$(HDIR)
+V1190LIB = v1190.o
+LDFLAGS = -lvme $(V1190LIB)
+
+
+TARGET = v1190test  \
+        v1190_MH  \
+	v1190_trig_match_mode \
+	v1190_cont_storage_mode \
+	v1190_status \
+	v1190_dump_data \
+	v1190_software_trigger \
+	v1190_en_head_trailer \
+	v1190_dis_head_trailer \
+	v1190_read_head_trailer \
+	v1190_init \
+	v1190_mcst_cont \
+	v1190_clear \
+
+all: v1190.o $(TARGET)
+
+clean:
+	rm -f $(TARGET) *.o

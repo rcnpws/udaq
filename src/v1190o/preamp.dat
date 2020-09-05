@@ -1,0 +1,214 @@
+Module Number: 1
+Event Count: 0x00000002(2)
+0000: 4000003f
+  Global Header
+    id:          08(8)
+    event count: 000001(1)
+    geo:         1f(31)
+0004: 08001d4b
+  TDC Header
+    tdc:         0(0)
+    event id:    001(1)
+    bunch id:    d4b(3403)
+0008: 00055a2a
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     00(0)
+    measurement: 55a2a(350762)
+000c: 00455a25
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     08(8)
+    measurement: 55a25(350757)
+0010: 00855a08
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     10(16)
+    measurement: 55a08(350728)
+0014: 00c55a14
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     18(24)
+    measurement: 55a14(350740)
+0018: 000d5a26
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     01(1)
+    measurement: 55a26(350758)
+001c: 004d5a25
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     09(9)
+    measurement: 55a25(350757)
+0020: 008d5a06
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     11(17)
+    measurement: 55a06(350726)
+0024: 00cd5a0f
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     19(25)
+    measurement: 55a0f(350735)
+0028: 00155a26
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     02(2)
+    measurement: 55a26(350758)
+002c: 00555a21
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     0a(10)
+    measurement: 55a21(350753)
+0030: 00955a04
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     12(18)
+    measurement: 55a04(350724)
+0034: 00d55a12
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     1a(26)
+    measurement: 55a12(350738)
+0038: 001d5a23
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     03(3)
+    measurement: 55a23(350755)
+003c: 005d5a21
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     0b(11)
+    measurement: 55a21(350753)
+0040: 009d5a0e
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     13(19)
+    measurement: 55a0e(350734)
+0044: 00dd5a0f
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     1b(27)
+    measurement: 55a0f(350735)
+0048: 00255a26
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     04(4)
+    measurement: 55a26(350758)
+004c: 00655a24
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     0c(12)
+    measurement: 55a24(350756)
+0050: 00a55a13
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     14(20)
+    measurement: 55a13(350739)
+0054: 00e55a10
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     1c(28)
+    measurement: 55a10(350736)
+0058: 002d5a1e
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     05(5)
+    measurement: 55a1e(350750)
+005c: 006d5a1e
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     0d(13)
+    measurement: 55a1e(350750)
+0060: 00ad5a0f
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     15(21)
+    measurement: 55a0f(350735)
+0064: 00ed5a0e
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     1d(29)
+    measurement: 55a0e(350734)
+0068: 00355a24
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     06(6)
+    measurement: 55a24(350756)
+006c: 00755a1e
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     0e(14)
+    measurement: 55a1e(350750)
+0070: 00b55a13
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     16(22)
+    measurement: 55a13(350739)
+0074: 00f55a0e
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     1e(30)
+    measurement: 55a0e(350734)
+0078: 003d5a1d
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     07(7)
+    measurement: 55a1d(350749)
+007c: 007d5a19
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     0f(15)
+    measurement: 55a19(350745)
+0080: 00bd5a0f
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     17(23)
+    measurement: 55a0f(350735)
+0084: 00fd5a13
+  TDC Measurement
+    trailing:    0(0) leading
+    channel:     1f(31)
+    measurement: 55a13(350739)
+0088: 18001022
+  TDC Trailer
+    tdc:         0(0)
+    event_id:    001(1)
+    word_count:  022(34)
+008c: 09001d4b
+  TDC Header
+    tdc:         1(1)
+    event id:    001(1)
+    bunch id:    d4b(3403)
+0090: 19001002
+  TDC Trailer
+    tdc:         1(1)
+    event_id:    001(1)
+    word_count:  002(2)
+0094: 0a001d4b
+  TDC Header
+    tdc:         2(2)
+    event id:    001(1)
+    bunch id:    d4b(3403)
+0098: 1a001002
+  TDC Trailer
+    tdc:         2(2)
+    event_id:    001(1)
+    word_count:  002(2)
+009c: 0b001d4b
+  TDC Header
+    tdc:         3(3)
+    event id:    001(1)
+    bunch id:    d4b(3403)
+00a0: 1b001002
+  TDC Trailer
+    tdc:         3(3)
+    event_id:    001(1)
+    word_count:  002(2)
+00a4: 8000055f
+  Global Trailer
+    status:      0(0)
+    word count:  00002a(42)
+    geo:         1f(31)
+00a8: c0000000
+  Filler

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Gamma detector FERA initialize E306, Okayama-U
+#
+ferainit  ${HOME}/udaq/dat/ferainit_gamma.dat
+
+Xilinxload 2 4 ${HOME}/udaq/bit/fcet/fcet_fera.bit -s
+  
+nfa 4  9 0 0 2
+nfa 4 16 1 0xcccc 2
+nfa 4  0 1 0 2
+nfa 4  0 2 0 2 
+nfa 4  0 3 0 2
+

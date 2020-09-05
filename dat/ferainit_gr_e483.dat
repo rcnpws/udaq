@@ -1,0 +1,172 @@
+; Initialyze FERA (with program nfaLoop)
+; created 1996-JUN-15
+; change TDC VSN N9:82,N10:81 15 July, 1998 by Hidetomo Y.
+; changed by Hidetomo P. Yoshida on 4th Apr 2001 to add 2 TDC modules
+;            VSN b1,b2:ssd TDC
+;
+; 2017.7.11 The module positions were changed.
+;
+; number of loop
+;> Wait
+;W 10
+> Set FERA Status (N=7, 8, 9, and 10)
+> Virtual Station Number     #01-08 Bit
+> ECL Pedestal Subtraction   #09 Bit      = 1
+> ECL Data Compress          #10 Bit      = 1
+> ECL Port Enable            #11 Bit      = 1
+> CAMAC Data Compress        #12 Bit      = 0
+> CAMAC Pedestal Subtraction #13 Bit      = 0
+> CAMAC Sequential ReadOut   #14 Bit      = 0
+> CAMAC LAM Enable           #15 Bit      = 0
+> Overflow Suppression       #16 Bit      = 0 ADC
+> Overflow Suppression       #16 Bit      = 1 TDC
+; Clear Crate Inhibit
+30 17 0 0      0
+;Set Status Words
+ 9  9 0 0      0
+ 9 16 0 0x0702  0
+ 9  0 0 0      0
+W  1
+10  9 0 0      0
+10 16 0 0x0701  0
+10  0 0 0      0
+W  1
+11  9 0 0      0
+11 16 0 0x87b2  0
+11  0 0 0      0
+W  1
+12  9 0 0      0
+12 16 0 0x87b1  0
+12  0 0 0      0
+W  1
+13  9 0 0      0
+13 16 0 0x8782  0
+13  0 0 0      0
+W  1
+14  9 0 0      0
+14 16 0 0x8781  0
+14  0 0 0      0
+; Set FERA Pedestal Value(with program nfaLoop)
+; created 1996-JUL-16 (for ECL Output)
+>   Set Pedestal Values (N=12)
+ 9  9  0  0  0
+ 9 17  0 0  0
+ 9 17  1 0  0
+ 9 17  2 0  0
+ 9 17  3 0  0
+ 9 17  4 0  0
+ 9 17  5 0  0
+ 9 17  6 0  0
+ 9 17  7 0  0
+ 9 17  8 0  0
+ 9 17  9 0  0
+ 9 17 10 0  0
+ 9 17 11 0  0
+ 9 17 12 0  0
+ 9 17 13 0  0
+ 9 17 14 0  0
+ 9 17 15 0  0
+W 1
+>   Set Pedestal Values (N=13)
+10  9  0  0  0
+10 17  0  0  0
+10 17  1  0  0
+10 17  2  0  0
+10 17  3  0  0
+10 17  4  0  0
+10 17  5  0  0
+10 17  6 0  0
+10 17  7 0  0
+10 17  8 0  0
+10 17  9 0  0
+10 17 10 0  0
+10 17 11 0  0
+10 17 12 0  0
+10 17 13 0  0
+10 17 14 0  0
+10 17 15 0  0
+W 1
+>   Set Pedestal Values (N=14)
+11  9  0   0  0
+11 17  0 255  0
+11 17  1 255  0
+11 17  2 255  0
+11 17  3 255  0
+11 17  4 255  0
+11 17  5 255  0
+11 17  6 255  0
+11 17  7 255  0
+11 17  8 255  0
+11 17  9 255  0
+11 17 10 255  0
+11 17 11 255  0
+11 17 12 255  0
+11 17 13 255  0
+11 17 14 255  0
+11 17 15 255  0
+W 1
+>   Set Pedestal Values (N=15)
+12  9  0   0  0
+12 17  0 255  0
+12 17  1 255  0
+12 17  2 255  0
+12 17  3 255  0
+12 17  4 255  0
+12 17  5 255  0
+12 17  6 255  0
+12 17  7 255  0
+12 17  8 255  0
+12 17  9 255  0
+12 17 10 255  0
+12 17 11 255  0
+12 17 12 255  0
+12 17 13 255  0
+12 17 14 255  0
+12 17 15 255  0
+W 1
+>   Set Pedestal Values (N=16)
+13  9  0  0  0
+13 17  0  0  0
+13 17  1  0  0
+13 17  2  0  0
+13 17  3  0  0
+13 17  4  0  0
+13 17  5  0  0
+13 17  6  0  0
+13 17  7  0  0
+13 17  8  0  0
+13 17  9  0  0
+13 17 10  0  0
+13 17 11  0  0
+13 17 12  0  0
+13 17 13  0  0
+13 17 14  0  0
+13 17 15  0  0
+W 1
+>   Set Pedestal Values (N=17)
+14  9  0  0  0
+14 17  0  0  0
+14 17  1  0  0
+14 17  2  0  0
+14 17  3  0  0
+14 17  4  0  0
+14 17  5  0  0
+14 17  6  0  0
+14 17  7  0  0
+14 17  8  0  0
+14 17  9  0  0
+14 17 10  0  0
+14 17 11  0  0
+14 17 12  0  0
+14 17 13  0  0
+14 17 14  0  0
+14 17 15  0  0
+W 1
+> End
+end
+
+
+
+
+
+

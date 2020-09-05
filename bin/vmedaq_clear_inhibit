@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# clear v977 for reseting the inhibit sigal
+v977_ope -i
+v977_ope -s 0

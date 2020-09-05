@@ -1,0 +1,91 @@
+--------------------------------------------------------------------------
+Board ID             : 0xe725      should be = e725
+Code Revision        : 0x0b12 [0x0600]                     
+  PCB Revision:      : 0               
+  Firmware Type:     : 11               
+  Code Revision:     : 1.2            
+  Code Date:         : 20160531         
+FIFO Status          : 0x6767 [0x0004]                     
+  FLAG: 0 1 2 3      : 1 1 1 1     extra or parity bits 
+  EF:   A B          : 0 0         empty flags            
+  PAE:  A B          : 0 0         partially empty flags  
+  HF:   A B          : 1 1         harf full               
+  FFIR: A B          : 1 1         full flag or input ready
+  DAV:               : 0           DAV
+Hardware Status      : 0x4d13 [0x0020]                     
+  STAT: 0 1          : 1 1         non-SerDes LVDS lines    
+  SD_LOCK:           : 1           SerDes LOCK* (active low) 
+  SD_SM_LOCK:        : 0           SerDes State Machine Lock 
+  SD_SM_LST_LK:      : 0           SerDes State Machine Lost Lock 
+  UNQ_SM_LCK:        : 1           SerDes Unqualified State Machine Lock 
+  SYNC:              : 0           SerDes SYNC command 
+  ISYNC:             : 0           SerDes Imperial SYNC command 
+  DCM_LOCK:          : 1           Digital Clock Manager Logic Lock 
+  DCM_STATUS:        : 01          Digital Clock Manager Logic Status 
+  CNTR_ERROR:        : 0           Counter Error 
+FIFO Control         : 0x0000 [0x040e]                     
+  FLAG: 0 1 2 3      : 0 0 0 0     extra or parity input    
+  BE/LE:             : 0           Little endian    
+  FWFT/SI:           : 0           Standard FIFO Mode
+NIM Input Status     : 0x0000 [0x0700]                     
+Gating Register      : 0x0001 [0x0702]                     
+  TRIG_IN_SEL:       : 0         = NIM    
+  INT_MUX: A B       : 0 0         internal logic analyzer selection  
+  FORCE_FIFO:        : 0         = No  
+  TS_LATCH_SOURCE:   : 1         = Local detector trigger  
+ECL-A Input Status   : 0x0000 [0x0704]                     
+ECL-B Input Status   : 0x0    [0x0706]                     
+Latched Time Stamp   : 0x0000-0000-0000   [0x0714] = 00000000.00000000 sec 
+Live Time Stamp      : 0x0000-dbbe-95cc   [0x0708] = 00000036.86699988 sec 
+Coin. Window Delay   : 0x0100 [0x0710] = 256x10 nsec         
+Coin. Window Width   : 0x0110 [0x0712] = 272x10 nsec         
+TS Error Counter Ctrl: 0x0000 0x0000 [0x071a]                     
+  RESET:             : 0         = No    
+  MODE:              : 0         = Rate    
+  INHIBIT:           : 0         = No    
+  Rate Period:       : 0         x 10 nsec  
+TS Error Counter     : 0x00000000 [0x071e]                     
+Trigger Time Offset  : 0x0800 [0x0722] = 2048x10 nsec         
+Miss Trig Count      : 0x0000 [0x0724]                     
+Miss Trig Count TS   : 0x0000 [0x0726]                     
+TS Propagation Ctrl  : 0x31ff [0x0728]                     
+  DES:               : 0xff              
+  SYNC:              : 1         = Yes    
+FIFO Counter         : 0x0000 [0x07ec]  = 0       
+Trig Counter         : 0x0000 [0x07f0]  = 0       
+User Counter NIM-0   : 0x0000 [0x07f2]  = 0       
+User Counter NIM-1   : 0x0000 [0x07f4]  = 0       
+User Counter NIM-2   : 0x0000 [0x07f6]  = 0       
+User Counter NIM-3   : 0x0000 [0x07f8]  = 0       
+User Counter NIM-4   : 0x0000 [0x07fa]  = 0       
+User Counter NIM-5   : 0x0000 [0x07fc]  = 0       
+User Counter NIM-6   : 0x0000 [0x07fe]  = 0       
+User Counter NIM-7   : 0x0000 [0x0800]  = 0       
+SerDes Config        : 0x8063 0x8063 [0x0848]  Serializer/Deserializer      
+  DEN:               : 1           SerDes DEN
+  REN:               : 1           SerDes REN
+  LINE LE:           : 0           SerDes Diagnostic Loop for Line 
+  LOC LE:            : 0           SerDes Diagnostic Loop for Local
+  SYNC:              : 0           SerDes Ignore TX
+  T PWR*:            : 1           SerDes Transmitter Power
+  R PWR*:            : 1           SerDes Receiver Power
+  SL:                : 0           SerDes Stringent Lock for Monitoring Errs
+  CLK SEL:           : 1           Local Board Oscillator Clock
+FIFO Data            : [0x1000]  
+  0000: 0000 0000 0000 0000 0000 0000 0000 0000 
+  0010: 0000 0000 0000 0000 0000 0000 0000 0000 
+  0020: 0000 0000 0000 0000 0000 0000 0000 0000 
+  0030: 0000 0000 0000 0000 0000 0000 0000 0000 
+  0040: 0000 0000 0000 0000 0000 0000 0000 0000 
+  0050: 0000 0000 0000 0000 0000 0000 0000 0000 
+  0060: 0000 0000 0000 0000 0000 0000 0000 0000 
+  0070: 0000 0000 0000 0000 0000 0000 0000 0000 
+  0080: 0000 0000 0000 0000 0000 0000 0000 0000 
+  0090: 0000 0000 0000 0000 0000 0000 0000 0000 
+  00a0: 0000 0000 0000 0000 0000 0000 0000 0000 
+  00b0: 0000 0000 0000 0000 0000 0000 0000 0000 
+  00c0: 0000 0000 0000 0000 0000 0000 0000 0000 
+  00d0: 0000 0000 0000 0000 0000 0000 0000 0000 
+  00e0: 0000 0000 0000 0000 0000 0000 0000 0000 
+  00f0: 0000 0000 0000 0000 0000 0000 0000 0000 
+--------------------------------------------------------------------------

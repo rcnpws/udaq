@@ -1,0 +1,47 @@
+; Initialyze FERA (with program nfaLoop)
+; created 1997-OCT-27
+; changed on 24-SEP-1999 by A. Tamii for e138 (n,p)
+; 2017.7.11 module positions were changed
+;
+; number of loop
+;1
+> Set FERA Status (N=15, 16, 17 and 18)
+> Virtual Station Number     #01-08 Bit
+> ECL Data Compress          #09 Bit      = 1
+> ECL Pedestal Subtraction   #10 Bit      = 1
+> ECL Port Enable            #11 Bit      = 1
+> CAMAC Data Compress        #12 Bit      = 0
+> CAMAC Pedestal Subtraction #13 Bit      = 0
+> CAMAC Sequential ReadOut   #14 Bit      = 0
+> CAMAC LAM Enable           #15 Bit      = 0
+> Overflow Suppression       #16 Bit      = 0 ADC
+> Overflow Suppression       #16 Bit      = 1 TDC
+; clear crate inhibit
+30 17 0 0 1
+; Set Status Words
+ 9  9 0 0 1    
+ 9 16 0 0x0712 1
+ 9  0 0 0 1    
+W 2
+10  9 0 0 1    
+10 16 0 0x0711 1
+10  0 0 0 1    
+W 2
+11  9 0 0 1
+11 16 0 0x8794 1
+11  0 0 0 1     
+W 2
+12  9 0 0 1    
+12 16 0 0x8793 1
+12  0 0 0 1    
+W 2
+13  9 0 0 1    
+13 16 0 0x8792 1
+13  0 0 0 1    
+W 2
+14  9 0 0 1    
+14 16 0 0x8791 1
+14  0 0 0 1    
+W 2
+; End
+end

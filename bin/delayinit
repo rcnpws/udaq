@@ -1,0 +1,50 @@
+#!/usr/bin/perl
+#
+# Simple script for initialize FERA system
+#
+#   Ver0.1  2001/05/25    M.Uchida
+#
+
+printf("\n *****  DELAYINIT  Ver0.2 ***** \n");
+
+if($#ARGV < 0){
+    printf("Using a default parameter file\n");
+    $file = "$ENV{'HOME'}/udaq/dat/delayinit.dat";
+} else {
+    printf("Using a file %s \n",$ARGV[0]);
+    $file= $ARGV[0];
+}
+
+open(INP,$file);
+
+line: while(<INP>){
+
+# Comment
+    next line if(/^;/);
+# Skip line
+    next line if(/^\n/);
+
+# End
+    last line if(/^end/);
+
+# Print
+    if(/^>/){
+	print $_;
+	goto line;
+    }
+
+# Wait
+    if(/^W/){
+	chop;
+	($com,$dur)=split;
+	sleep($dur);
+	goto line;
+    }
+
+# Default (Exec) 
+    chop;
+    ($n,$f,$a,$data,$c) = split;
+    system("nfa",$n,$f,$a,$data,$c);
+}
+
+    

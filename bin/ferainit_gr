@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# module stations were shifted on 2017.7.11
+
+ferainit  ${HOME}/udaq/dat/ferainit_gr.dat
+
+Xilinxload 0 8 ${HOME}/udaq/bit/fcet/fcet_fera.bit -s
+  
+nfa 8 9 0 0
+nfa 8 16 1 0xcccc 0
+nfa 8 0 1 0
+nfa 8 0 2 0 
+nfa 8 0 3 0
+

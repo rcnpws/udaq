@@ -1,0 +1,21 @@
+#!/bin/sh
+#init3377 and initialyze FCET swaped version
+# 24 Feb '97
+# 25 Jul '98 by Hidetomo Y.
+# Ver 2.0(for Solaris2.6)  2001/05/24   M.Uchida
+# Ver 3.0(for Linux2.6)    2008/09/05   M.Uchida
+echo FCET INIT
+Xilinxload 6 15 $HOME/udaq/bit/fcet/fcet_fera.bit -s
+nfa 15 9 0 6
+nfa 15 16 1 0xbbbb 6
+sleep 1
+nfa 15 0 1 6
+nfa 15 0 2 6
+nfa 15 0 3 6
+sleep 2
+
+echo Initialyze 3377 
+# Initialyze 3377
+init3377_gr -y
+echo Finish!
+

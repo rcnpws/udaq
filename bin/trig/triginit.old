@@ -1,0 +1,17 @@
+*! Initialize Trigger Circuit for GR-Single
+* triginit_grfpp 
+* 18-Jun 1997 by Hidetomo Y.
+
+*/h0/gr/bit/maintrig/Rsca.bit == rsca_t1.bit
+*/h0/gr/bit/maintrig/Fgrf.bit == fgrf_t4.bit 
+*/h0/gr/bit/maintrig/Rfpp.bit == rfpp_t3.bit 
+*/h0/gr/bit/bufch/bufch.bit == bufch_1.bit 
+
+xilinxload 0 13 /h0/gr/bit/maintrig/Rsca.bit -s
+xilinxload 0 14 /h0/gr/bit/maintrig/Fgrf.bit -s
+xilinxload 0 15 /h0/gr/bit/maintrig/Rfpp.bit -s
+xilinxload 0 17 /h0/gr/bit/bufch/bufch.bit -s
+
+*nfa initialize file
+inittrig_slct
+

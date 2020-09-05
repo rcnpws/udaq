@@ -1,0 +1,92 @@
+#ifndef V977_REG_H
+#define V977_REG_H
+
+/*
+ * Definitions for V977
+ *
+ *  Version 1.00        2013-02-01      by A. oiwa (For Linux2.6)GE-FANUC  based on v1190 source by Tamii 
+ */
+
+
+/* Size of I/O space */
+
+#define V977_MAX_N_MODULES     64          /* Max number of V977 Modules */
+#define V977_BASE_INI   0xFF000000         /* VME base address start      */
+#define V977_BASE_INC   0x00010000         /* VME base address increment  */
+#define V977_BASE(module_number)  ((V977_BASE_INI)+(V977_BASE_INC)*(module_number))
+
+#define V977_SIZE   0x0030		   /* Full Size of Memory Map*/
+
+
+/* VME addressing mode */
+#if 1
+#define V977_MODE  VME_A32UD       /* 32bit Extended Non-Prvileged Data Accesss  */
+#else
+#define V977_MODE  VME_A32SD       /* 32bit Extended Prvileged Data Accesss  */
+#endif
+
+
+/*
+ * V977 Memory Register
+ */
+
+typedef struct V977{
+  unsigned short input_set;		/* r/w */
+  unsigned short input_mask;		/* r/w */ 
+  unsigned short input_read;		/* r   */
+  unsigned short singlehit_read;	/* r   */
+  unsigned short multihit_read;		/* r   */
+  unsigned short output_set;		/* r/w */
+  unsigned short output_mask;   	/* r/w */
+  unsigned short interrupt_mask;	/* r/w */
+  unsigned short clear_output;		/* w   */
+  unsigned short reserved1;		/*     */
+  unsigned short reserved2;		/*     */
+  unsigned short singlehit_read_clear;	/* r   */
+  unsigned short multihit_read_clear;	/* r   */
+  unsigned short test_control_register;	/* r/w */
+  unsigned short reserved3;		/*     */
+  unsigned short reserved4;		/*     */
+  unsigned short interrupt_reveli;	/* r/w */ 
+  unsigned short interrupt_vector;	/* r/w */ 
+  unsigned short serial_number;		/* r   */ 
+  unsigned short firmware_revision; 	/* r   */ 
+  unsigned short control_register; 	/* r/w */ 
+  unsigned short dummy_register; 	/* r/w */ 
+  unsigned short reserved5;		/*     */
+  unsigned short software_reset;	/* w   */
+} V977_t, *V977_p;
+
+
+
+#define V977_InputSet			0x0000
+#define V977_InputMask			0x0002
+#define V977_InputRead			0x0004
+#define V977_SinglehitRead		0x0006
+#define V977_MultihitRead		0x0008
+#define V977_OutputSet			0x000A
+#define V977_OutputMask			0x000C
+#define V977_InterruptMask		0x000E
+#define V977_ClearOutput		0x0010
+#define V977_SinglehitReadClear		0x0016
+#define V977_MultihitReadClear		0x0018
+#define V977_TestControlRegister	0x001A
+#define V977_InterruptLevel		0x0020
+#define V977_InterruptVector		0x0022
+#define V977_SerialNumber		0x0024
+#define V977_FirmwareRevision		0x0026
+#define V977_CR				0x0028	/* control register */
+#define V977_DummyRegister		0x002A
+#define V977_SoftwareReset		0x002E
+
+
+
+/*
+ * prototype definitions of library functions
+ */
+int v977_open(void);
+V977_p v977_map(int module_number);
+int v977_unmap(int module_number);
+int v977_close(void);
+
+#endif  /* for ifndef V977_REG_H */

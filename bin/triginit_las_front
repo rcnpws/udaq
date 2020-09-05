@@ -1,0 +1,21 @@
+#!/bin/sh
+# triginit_las_std
+# Initialize Trigger Circuit for LAS-first-trigger
+# from vme01-version
+# changed on 19 DEC 2002 by H. P. Yoshida for FORCE54
+
+ 
+#     /h0/gr/bit/lastrig/Lfpp.bit = lfpp_t1.bit
+#                                == lfpp_t3.bit
+#                                == lfppv2a.bit
+#  for x4006E-2 
+#  xlinxdown 0 10 /h0/gr/bit/lastrig/Lfpp.bit <= vme01
+#Xilinxload 0 10 $HOME/udaq/bit/lastrig/Lfpp.bit -s
+Xilinxload 0 10 $HOME/udaq/bit/las/Lfpp.bit -s
+
+#nfa initialize file
+$HOME/udaq/bin/inittrig_las_nfa_front
+
+# #or 
+# inittrig_las ${HOME}/udaq/bin/inittrig_las_std.dat
+

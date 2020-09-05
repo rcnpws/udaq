@@ -1,0 +1,3 @@
+#!/bin/sh
+
+Xilinxload 0 6 ${HOME}/udaq/bit/2ndLevel/fppmlu_h.bit -s
