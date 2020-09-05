@@ -1490,7 +1490,7 @@ void mqdc32_init(){
     else if(!strcasecmp(sval, "B0AC_B1DC")) input_coupling = MQDC32_INPUT_COUPLING_B0AC_B1DC;
     else if(!strcasecmp(sval, "B0DC_B1DC")) input_coupling = MQDC32_INPUT_COUPLING_B0DC_B1DC;
     else{
-      fprintf(stderr, "Invalid value for mqdc32_input_range: %s\n", sval);
+      fprintf(stderr, "Invalid value for mqdc32_input_coupling: %s\n", sval);
       input_coupling = MQDC32_INPUT_COUPLING_B0AC_B1AC;
     }
 
@@ -1511,7 +1511,7 @@ void mqdc32_init(){
       nim_fc_reset = MQDC32_NIM_FC_RESET_FAST_CLEAR;
     }
 
-    sval = config_get_s_value("mqdc32_nim_busy", i, "threshold");
+    sval = config_get_s_value("mqdc32_nim_busy", i, "data_threshold");
     if(!strcasecmp(sval, "busy")) nim_busy = MQDC32_NIM_BUSY_BUSY;
     else if(!strcasecmp(sval, "cbus")) nim_busy = MQDC32_NIM_BUSY_CBUS;
     else if(!strcasecmp(sval, "full")) nim_busy = MQDC32_NIM_BUSY_BUFFER_FULL;
@@ -1556,7 +1556,7 @@ void mqdc32_init(){
 	    marking_type == MQDC32_MARKING_TYPE_TIME_STAMP ?    "time stamp" :
 	    marking_type == MQDC32_MARKING_TYPE_EXTENDED_TIME_STAMP ? "extended time stamp" :
 	    "Undefined");
-    fprintf(stderr, "  input_coupling         = %6d (%.4x) = %s\n", input_coupling, input_coupling,
+    fprintf(stderr, "  input_coupling      = %6d (%.4x) = %s\n", input_coupling, input_coupling,
 	    input_coupling == MQDC32_INPUT_COUPLING_B0AC_B1AC ? "bank0:AC, bank1:AC" :
 	    input_coupling == MQDC32_INPUT_COUPLING_B0DC_B1AC ? "bank0:DC, bank1:AC" :
 	    input_coupling == MQDC32_INPUT_COUPLING_B0AC_B1DC ? "bank0:AC, bank1:DC" :
