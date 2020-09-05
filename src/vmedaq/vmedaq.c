@@ -1522,7 +1522,7 @@ void mqdc32_init(){
       nim_fc_reset = MQDC32_NIM_BUSY_DATA_THRESHOLD;
     }
 
-    sval = config_get_s_value("mqdc32_ts_sources", i, "internal");
+    sval = config_get_s_value("mqdc32_ts_sources", i, "external");
     if(!strcasecmp(sval, "internal")) ts_sources = MQDC32_TS_SOURCES_VME;
     else if(!strcasecmp(sval, "external")) ts_sources = MQDC32_TS_SOURCES_EXT;
     else{
