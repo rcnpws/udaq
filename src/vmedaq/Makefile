@@ -5,7 +5,7 @@ HDIR=../../include
 LIBDIR=../../lib
 
 CFLAGS = -O0 -Wall -I$(HDIR)
-LIB = $(LIBDIR)/v1190.o $(LIBDIR)/madc32.o $(LIBDIR)/v977.o $(LIBDIR)/v830.o $(LIBDIR)/myriad.o $(LIBDIR)/config.o
+LIB = $(LIBDIR)/v1190.o $(LIBDIR)/madc32.o $(LIBDIR)/mqdc32.o $(LIBDIR)/v977.o $(LIBDIR)/v830.o $(LIBDIR)/myriad.o $(LIBDIR)/config.o
 LDFLAGS = -lvme
 
 

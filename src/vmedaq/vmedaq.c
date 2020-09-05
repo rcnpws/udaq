@@ -1,4 +1,4 @@
-/* vmedaq.c ---- vme DAQ with V1190                                         */
+/* vmedaq.c ---- vme DAQ with V1190, MADC32, MQDC32, V830                   */
 /*								            */
 /*  Version 1.00        2013-09-05      by A. Tamii (For Linux2.6)GE-FANUC) */
 /*  Version 2.00        2016-04-12      by A. Tamii (Use a config file)     */
@@ -24,6 +24,7 @@
 #include "vmedaq.h"
 #include "v1190.h"
 #include "madc32.h"
+#include "mqdc32.h"
 #include "v977.h"
 #include "v830.h"
 #include "myriad.h"
@@ -72,6 +73,13 @@ int madc32_module_numbers[MADC32_MAX_N_MODULES];
 int madc32_module_id[MADC32_MAX_N_MODULES];
 int madc32_module_counters[MAX_N_MADC32_MODULE_COUNTERS];
 MADC32_p madc32[MADC32_MAX_N_MODULES];
+
+#define MAX_N_MQDC32_MODULE_COUNTERS 0x10000
+int mqdc32_n_modules = 0;
+int mqdc32_module_numbers[MQDC32_MAX_N_MODULES];
+int mqdc32_module_id[MQDC32_MAX_N_MODULES];
+int mqdc32_module_counters[MAX_N_MQDC32_MODULE_COUNTERS];
+MQDC32_p mqdc32[MQDC32_MAX_N_MODULES];
 
 int myriad_n_modules = 0;
 MyRIAD_p myriad = (MyRIAD_p)NULL;
@@ -275,6 +283,9 @@ void clear_event_counters(){
   for(i=0; i<madc32_n_modules; i++){
     madc32[i]->reset_ctr_ab = 1;   /* clear the event counter */
   }
+  for(i=0; i<mqdc32_n_modules; i++){
+    mqdc32[i]->reset_ctr_ab = 1;   /* clear the event counter */
+  }
 }
 
 void reset_event_counters(){
@@ -320,6 +331,14 @@ void show_counter(){
       fprintf(stderr, "%5ld", ((madc32[i]->evctr_hi<<16)|(madc32[i]->evctr_lo))-n);
     }
   }
+  if(mqdc32_n_modules>0){
+    n = (mqdc32[0]->evctr_hi<<16)|(mqdc32[0]->evctr_lo);
+    fprintf(stderr, "%8ld", n+counter_offset);
+    for(i=1; i<mqdc32_n_modules; i++){
+      fprintf(stderr, "%5ld", ((mqdc32[i]->evctr_hi<<16)|(mqdc32[i]->evctr_lo))-n);
+    }
+  }
+
   fprintf(stderr, " (%5ld,%12ld,%ld blk)", v830_scalers[0]-n-counter_offset, v830_scalers[0], v830_scalers[1]);
   fprintf(stderr, ", size: %6lld MB (%12lld bytes)", data_size/1024/1024, data_size);
   fprintf(stderr, "\n%c%c", 27, 'M');
@@ -577,6 +596,151 @@ long madc32_check_data(MADC32_p madc32, int mid, unsigned long *l_buffer, int l_
   return event_count;
 }
 
+
+long mqdc32_check_data(MQDC32_p mqdc32, int mid, unsigned long *l_buffer, int l_buf_size, int *l_size){
+  unsigned int data;
+  unsigned int buffer_data_length;
+  unsigned int *buffer;
+  unsigned int buf_size;
+  unsigned int *header_pos = (unsigned int*)NULL;
+  long event_count = -1;
+  int i;
+  int module_id=-1;
+  int size;
+  int eoe_data;
+  VMEDAQ_HEADER_p vmedaq_header;
+  MQDC32_HEADER_SIGNATURE_p    signature;
+  MQDC32_DATA_HEADER_p         header;
+  MQDC32_DATA_EVENT_p          event;
+  MQDC32_EXTENDED_TIME_STAMP_p extended_time_stamp;
+  MQDC32_FILL_p                fill;
+  MQDC32_END_OF_EVENT_p        end_of_event;
+
+  int header_flag;
+  int end_of_event_flag;
+  int no_header_flag;
+
+  buffer = (unsigned int*)l_buffer;
+  buf_size = l_buf_size*sizeof(long)/sizeof(int);
+
+  vmedaq_header = (VMEDAQ_HEADER_p)buffer;
+  size = sizeof(VMEDAQ_HEADER_t)/sizeof(int);
+
+  buffer_data_length = mqdc32->buffer_data_length;
+
+  // for fixing automatically the no header error event
+  header_flag = 0;
+  no_header_flag = 0;
+  end_of_event_flag = 0;
+
+  for(i=0; i<buffer_data_length; i++){ 
+    data = mqdc32->fifo_read;
+    buffer[size++] = data;
+    signature = (MQDC32_HEADER_SIGNATURE_p)&data;
+    switch(signature->header){
+    case MQDC32_HEADER_SIGNATURE_HEADER:
+      if(header_flag==1 && end_of_event_flag==0){
+	// no end_of_event
+	// manually generate an end of event data
+#if 0 // No need to generate EoE. instead a header is generated in the next event. 13-APR-2016
+	end_of_event = (MQDC32_END_OF_EVENT_p)&eoe_data;
+	end_of_event->header_signature = MQDC32_HEADER_SIGNATURE_END_OF_EVENT;
+	end_of_event->event_counter = 0;
+	if(0<=module_id && module_id<MAX_N_MQDC32_MODULE_COUNTERS){
+	  end_of_event->event_counter = ++mqdc32_module_counters[module_id];
+	}
+	buffer[size] = buffer[size-1];
+	buffer[size-1] = eoe_data;
+	size++;
+	if(header_pos!=(unsigned int*)NULL){
+	  header = (MQDC32_DATA_HEADER_p)header_pos;
+	  header->subheader = MQDC32_SUBHEADER_NO_END_OF_EVENT;  /* for the manually generate end of event */
+	}
+#endif
+	header_flag = 0;
+	no_header_flag = 0;
+	end_of_event_flag = 1;
+      }
+      header = (MQDC32_DATA_HEADER_p)&data;
+      module_id = header->module_id;
+      header_flag = 1;
+      end_of_event_flag = 0;
+      break;
+    case MQDC32_HEADER_SIGNATURE_DATA: 
+      if(!header_flag && !no_header_flag){
+	no_header_flag = 1;
+	header_pos = &buffer[size-1];  // pointer of the header position
+	buffer[size++] = data;
+      }
+      switch(signature->subheader){
+      case MQDC32_SUBHEADER_EVENT:
+	event = (MQDC32_DATA_EVENT_p)&data;
+	break;
+      case MQDC32_SUBHEADER_EXTENDED_TIME_STAMP:
+	extended_time_stamp = (MQDC32_EXTENDED_TIME_STAMP_p)&data;
+	break;
+      case MQDC32_SUBHEADER_FILL:
+	fill = (MQDC32_FILL_p)&data;
+	break;
+      default:
+	//fprintf(fd, "Unknown subheader = 0x%.3x", signature->subheader);
+	break;
+      }
+      break;
+    case MQDC32_HEADER_SIGNATURE_END_OF_EVENT:
+      end_of_event = (MQDC32_END_OF_EVENT_p)&data;
+      event_count = end_of_event->event_counter;
+      if(0<=module_id && module_id<MAX_N_MQDC32_MODULE_COUNTERS){
+	module_id = mid;
+      }
+      mqdc32_module_counters[module_id]=event_count;
+      if(!header_flag && no_header_flag){
+	header = (MQDC32_DATA_HEADER_p)header_pos;
+	header->n_data_words = ((size_t)&buffer[size]-(size_t)header_pos)/sizeof(int)-1;
+	header->adc_resolution = mqdc32->adc_resolution & 0x07;
+	header->output_format = 0;
+	header->module_id = mid;
+	header->subheader = MQDC32_SUBHEADER_NO_HEADER;  /* for the manually generated header */
+	header->header_signature = 1;
+      }
+      header_flag = 0;
+      no_header_flag = 0;
+      end_of_event_flag = 1;
+      break;
+    default:
+      //fprintf(fd, "Unknown header = 0x%.1x", signature->header);
+      break;
+      /////////
+    }
+    if(size>=buf_size) break;
+  }
+
+  if(header_flag==1 && end_of_event_flag==0){
+    // no end_of_event
+    // manually create an end of event data
+    end_of_event = (MQDC32_END_OF_EVENT_p)&eoe_data;
+    end_of_event->header_signature = MQDC32_HEADER_SIGNATURE_END_OF_EVENT;
+    end_of_event->event_counter = ++mqdc32_module_counters[mid];
+    buffer[size++] = eoe_data;
+    if(header_pos!=(unsigned int*)NULL){
+      header = (MQDC32_DATA_HEADER_p)header_pos;
+      header->subheader = MQDC32_SUBHEADER_NO_END_OF_EVENT;  /* for the artificially generated end of event */
+    }
+  }
+  
+  if(event_count<0){
+    *l_size = 0;
+    return event_count;
+  }
+  if((size&0x0001)==1){
+    buffer[size++] = 0x00; /* Filler for 64bit boundary*/
+  }
+  vmedaq_write_header(vmedaq_header, VMEDAQ_TYPE_MQDC32, size*sizeof(int));
+  *l_size = size*sizeof(int)/sizeof(long);
+  
+  return event_count;
+}
+
 long myriad_check_data(MyRIAD_p myriad, unsigned long *buffer, int buf_size, int *size){
   unsigned short data;
   unsigned short data1;
@@ -746,6 +910,12 @@ int read_data(int sd, FILE *fd){
     if(event_count>=0) n_data_modules++;
   }
 
+  for(i=0; i<mqdc32_n_modules; i++){
+    event_count = mqdc32_check_data(mqdc32[i], mqdc32_module_id[i], data_buffer, DATA_BUF_SIZE, &size);
+    if(write_data(sd, fd, size)<0) return -1;
+    if(event_count>=0) n_data_modules++;
+  }
+
   if(myriad_n_modules==1){
     event_count = myriad_check_data(myriad, data_buffer, DATA_BUF_SIZE, &size);
     if(write_data(sd, fd, size)<0) return -1;
@@ -893,7 +1063,7 @@ void usage(char *program_name){
   fprintf(stderr, " -o: write output into the file when no -n option (default=stdout)\n");
   fprintf(stderr, " -d: debug mode\n");
   fprintf(stderr, " -h: show this help\n");
-  fprintf(stderr, " -i: initialize V1190 and MADC32\n");
+  fprintf(stderr, " -i: initialize V1190, MADC32, and MQDC32\n");
   fprintf(stderr, " file_name: file to write data without -n option\n");
 }
 
@@ -1275,6 +1445,166 @@ void madc32_init(){
   }
 }
 
+
+void mqdc32_init(){
+  int i, ch;
+  char *sval;
+  int module_id;
+  int irq_threshold;
+  int multi_event;
+  int marking_type;
+  int input_coupling;
+  int nim_gat1_osc;
+  int nim_fc_reset;
+  int nim_busy;
+  int threshold;
+  int ts_sources;
+  int exp_trig_delay;
+
+  fprintf(stderr, "\n[MQDC32]\n");
+  for(i=0; i<mqdc32_n_modules; i++){
+    module_id      = config_get_l_value("mqdc32_module_id",      i, i);
+    irq_threshold  = config_get_l_value("mqdc32_irq_threshold",  i, MQDC32_IRQ_THRESHOLD_DEFAULT);
+
+    sval = config_get_s_value("mqdc32_multi_event",    i, "unlimited");
+    if(!strcasecmp(sval, "none")) multi_event = MQDC32_MULTI_EVENT_NO;
+    else if(!strcasecmp(sval, "unlimited")) multi_event = MQDC32_MULTI_EVENT_YES_UNLIMITED;
+    else if(!strcasecmp(sval, "limited"))   multi_event = MQDC32_MULTI_EVENT_YES_LIMITED;
+    else{
+      fprintf(stderr, "Invalid value for mqdc32_multi_event: %s\n", sval);
+      multi_event = MQDC32_MULTI_EVENT_YES_UNLIMITED;
+    }
+
+    sval = config_get_s_value("mqdc32_marking_type",   i, "event_counter");
+    if(!strcasecmp(sval, "event_counter")) marking_type = MQDC32_MARKING_TYPE_EVENT_COUNTER;
+    else if(!strcasecmp(sval, "time_stamp")) marking_type = MQDC32_MARKING_TYPE_TIME_STAMP;
+    else if(!strcasecmp(sval, "extended_time_stamp")) marking_type = MQDC32_MARKING_TYPE_EXTENDED_TIME_STAMP;
+    else{
+      fprintf(stderr, "Invalid value for mqdc32_marking_type: %s\n", sval);
+      marking_type = MQDC32_MARKING_TYPE_EVENT_COUNTER;
+    }
+
+    sval = config_get_s_value("mqdc32_input_coupling", i, "B0AC_B1AC");
+    if(!strcasecmp(sval, "B0AC_B1AC")) input_coupling = MQDC32_INPUT_COUPLING_B0AC_B1AC;
+    else if(!strcasecmp(sval, "B0DC_B1AC")) input_coupling = MQDC32_INPUT_COUPLING_B0DC_B1AC;
+    else if(!strcasecmp(sval, "B0AC_B1DC")) input_coupling = MQDC32_INPUT_COUPLING_B0AC_B1DC;
+    else if(!strcasecmp(sval, "B0DC_B1DC")) input_coupling = MQDC32_INPUT_COUPLING_B0DC_B1DC;
+    else{
+      fprintf(stderr, "Invalid value for mqdc32_input_range: %s\n", sval);
+      input_coupling = MQDC32_INPUT_COUPLING_B0AC_B1AC;
+    }
+
+    sval = config_get_s_value("mqdc32_nim_gat1_osc", i, "oscillator");
+    if(!strcasecmp(sval, "gate1")) nim_gat1_osc = MQDC32_NIM_GAT1_OSC_GATE1_INP;
+    else if(!strcasecmp(sval, "oscillator")) nim_gat1_osc = MQDC32_NIM_GAT1_OSC_TIME;
+    else{
+      fprintf(stderr, "Invalid value for mqdc32_gat1_osc: %s\n", sval);
+      nim_gat1_osc = MQDC32_NIM_GAT1_OSC_TIME;
+    }
+
+    sval = config_get_s_value("mqdc32_nim_fc_reset", i, "fast_clear");
+    if(!strcasecmp(sval, "fast_clear")) nim_fc_reset = MQDC32_NIM_FC_RESET_FAST_CLEAR;
+    else if(!strcasecmp(sval, "time_stamp")) nim_fc_reset = MQDC32_NIM_FC_RESET_TIME_STAMP;
+    else if(!strcasecmp(sval, "exp_trig")) nim_fc_reset = MQDC32_NIM_FC_RESET_EXP_TRIG;
+    else{
+      fprintf(stderr, "Invalid value for mqdc32_nim_fc_reset: %s\n", sval);
+      nim_fc_reset = MQDC32_NIM_FC_RESET_FAST_CLEAR;
+    }
+
+    sval = config_get_s_value("mqdc32_nim_busy", i, "threshold");
+    if(!strcasecmp(sval, "busy")) nim_busy = MQDC32_NIM_BUSY_BUSY;
+    else if(!strcasecmp(sval, "cbus")) nim_busy = MQDC32_NIM_BUSY_CBUS;
+    else if(!strcasecmp(sval, "full")) nim_busy = MQDC32_NIM_BUSY_BUFFER_FULL;
+    else if(!strcasecmp(sval, "data_threshold")) nim_busy = MQDC32_NIM_BUSY_DATA_THRESHOLD;
+    else if(!strcasecmp(sval, "evt_threshold"))  nim_busy = MQDC32_NIM_BUSY_EVT_THRESHOLD;
+    else{
+      fprintf(stderr, "Invalid value for mqdc32_nim_busy: %s\n", sval);
+      nim_fc_reset = MQDC32_NIM_BUSY_DATA_THRESHOLD;
+    }
+
+    sval = config_get_s_value("mqdc32_ts_sources", i, "internal");
+    if(!strcasecmp(sval, "internal")) ts_sources = MQDC32_TS_SOURCES_VME;
+    else if(!strcasecmp(sval, "external")) ts_sources = MQDC32_TS_SOURCES_EXT;
+    else{
+      fprintf(stderr, "Invalid value for mqdc32_ts_sources: %s\n", sval);
+      ts_sources = MQDC32_TS_SOURCES_VME;
+    }
+
+    sval = config_get_s_value("mqdc32_ts_sources_ext_reset_enable", i, "disable");
+    if(!strcasecmp(sval, "disable")) ;
+    else if(!strcasecmp(sval, "enable")) ts_sources |= MQDC32_TS_SOURCES_EXTERNAL_RESET;
+    else{
+      fprintf(stderr, "Invalid value for mqdc32_ts_sources_ext_reset_enable: %s\n", sval);
+    }
+
+    threshold      = config_get_l_value("mqdc32_threshold",      i, 0);
+
+    exp_trig_delay = config_get_l_value("mqdc32_exp_trig_delay", i, 0);
+
+    
+    fprintf(stderr, "Initializing module: %d\n", mqdc32_module_numbers[i]);
+    fprintf(stderr, "  module id           = %6d\n", module_id);
+    fprintf(stderr, "  irq_threshold       = %6d (%.4x) = %5d bytes\n", irq_threshold, irq_threshold,
+	    irq_threshold * 4);
+    fprintf(stderr, "  multi_event         = %6d (%.4x) = %s\n", multi_event, multi_event,
+	    multi_event == MQDC32_MULTI_EVENT_NO ? "none" :
+	    multi_event == MQDC32_MULTI_EVENT_YES_UNLIMITED ? "unlimited" :
+	    multi_event == MQDC32_MULTI_EVENT_YES_LIMITED ? "limited" :
+	    "Undefined");
+    fprintf(stderr, "  marking_type        = %6d (%.4x) = %s\n", marking_type, marking_type,
+	    marking_type == MQDC32_MARKING_TYPE_EVENT_COUNTER ? "event counter" :
+	    marking_type == MQDC32_MARKING_TYPE_TIME_STAMP ?    "time stamp" :
+	    marking_type == MQDC32_MARKING_TYPE_EXTENDED_TIME_STAMP ? "extended time stamp" :
+	    "Undefined");
+    fprintf(stderr, "  input_coupling         = %6d (%.4x) = %s\n", input_coupling, input_coupling,
+	    input_coupling == MQDC32_INPUT_COUPLING_B0AC_B1AC ? "bank0:AC, bank1:AC" :
+	    input_coupling == MQDC32_INPUT_COUPLING_B0DC_B1AC ? "bank0:DC, bank1:AC" :
+	    input_coupling == MQDC32_INPUT_COUPLING_B0AC_B1DC ? "bank0:AC, bank1:DC" :
+	    input_coupling == MQDC32_INPUT_COUPLING_B0DC_B1DC ? "bank0:DC, bank1:DC" :
+	    "Undefined");
+    fprintf(stderr, "  nim_gat1_osc        = %6d (%.4x) = %s\n", nim_gat1_osc, nim_gat1_osc,
+	    nim_gat1_osc == MQDC32_NIM_GAT1_OSC_GATE1_INP ?  "gate1" :
+	    nim_gat1_osc == MQDC32_NIM_GAT1_OSC_TIME ? "oscillator" :
+	    "Undefined");
+    fprintf(stderr, "  nim_fc_reset        = %6d (%.4x) = %s\n", nim_fc_reset, nim_fc_reset,
+	    nim_fc_reset == MQDC32_NIM_FC_RESET_FAST_CLEAR ?  "fast clear" :
+	    nim_fc_reset == MQDC32_NIM_FC_RESET_TIME_STAMP ?  "time stamp" :
+	    "Undefined");
+    fprintf(stderr, "  nim_busy            = %6d (%.4x) %s\n", nim_busy, nim_busy,
+	    nim_busy == MQDC32_NIM_BUSY_BUSY ?           "busy" :
+	    nim_busy == MQDC32_NIM_BUSY_CBUS ?           "cbus" :
+	    nim_busy == MQDC32_NIM_BUSY_BUFFER_FULL ?    "buffer full" :
+	    nim_busy == MQDC32_NIM_BUSY_DATA_THRESHOLD ? "data above threshold" :
+	    nim_busy == MQDC32_NIM_BUSY_EVT_THRESHOLD ?  "event above threshold" :
+	    "Undefined");
+    fprintf(stderr, "  ts_sources          = %6d (%.4x) %s\n", ts_sources, ts_sources,
+	    ts_sources & MQDC32_TS_SOURCES_EXT ? "external" : "internal");
+    fprintf(stderr, "  ts_sources_ext_reset_enable =       %s\n",
+	    ts_sources & MQDC32_TS_SOURCES_EXTERNAL_RESET ? "enable" : "disable");
+    fprintf(stderr, "  threshold           = %6d (%.4x)\n", threshold, threshold);
+    fprintf(stderr, "  experiment trigger delay           = %6d (%.4x)\n", exp_trig_delay, exp_trig_delay);
+
+    /* ------------- initialize MQDC32  ------------ */
+    mqdc32[i]->module_id = module_id;
+    mqdc32[i]->irq_threshold = irq_threshold;
+    mqdc32[i]->data_len_format = MQDC32_DATA_LEN_FORMAT_32BIT;
+    mqdc32[i]->multi_event = multi_event;
+    mqdc32[i]->marking_type = marking_type;  
+    mqdc32[i]->bank_operation = MQDC32_BANK_OPERATION_BANKS_CONNECTED;
+    mqdc32[i]->input_coupling = input_coupling;
+    mqdc32[i]->nim_gate1_osc = nim_gat1_osc;
+    mqdc32[i]->nim_fc_reset = nim_fc_reset;
+    mqdc32[i]->nim_busy = nim_busy;
+    mqdc32[i]->ts_sources = ts_sources;
+    
+    for(ch=0; ch<MQDC32_NUM_CHANNELS; ch++){
+      mqdc32[i]->threshold[ch] = threshold;
+    }
+
+    mqdc32[i]->exp_trig_delay0 = exp_trig_delay;
+  }
+}
+
 int main(int argc, char *argv[]){
   FILE *fd = stdout;
   int i;
@@ -1435,6 +1765,35 @@ int main(int argc, char *argv[]){
     }
   }
 
+  /*** --- MQDC32 --- ***/
+  fprintf(stderr, "\n[MQDC32]\n");
+  if(mqdc32_open()){
+    fprintf(stderr, "Error in mqdc32_open()\n");
+    exit(-1);
+  }
+
+  mqdc32_n_modules = config_get_l_value("mqdc32_n_modules", 0, 0);
+  if(mqdc32_n_modules<0 || MQDC32_MAX_N_MODULES<mqdc32_n_modules){
+    fprintf(stderr, "Invalid number for mqdc32_n_modules: %d.\n", mqdc32_n_modules);
+    exit(-1);
+  }
+  fprintf(stderr, "Number of MQDC32 modules = %d\n", mqdc32_n_modules);
+  for(i=0; i<mqdc32_n_modules; i++){
+    mqdc32_module_numbers[i] = config_get_l_value("mqdc32_module", i, i);
+    fprintf(stderr, "MQDC32 module number: %d\n", mqdc32_module_numbers[i]);
+  }
+
+  for(i=0; i<mqdc32_n_modules; i++){
+    fprintf(stderr, "Map MQDC32 #%d\n", mqdc32_module_numbers[i]);
+    mqdc32[i] = mqdc32_map(mqdc32_module_numbers[i]);
+    mqdc32_module_id[i] = mqdc32[i]->module_id;
+    if(mqdc32[i]==(MQDC32_p)NULL){
+      fprintf(stderr, "Error in mqdc32_map()\n");
+      mqdc32_close();
+      exit(-1);
+    }
+  }
+
   /*** --- MyRIAD --- ***/
   fprintf(stderr, "\n[MyRIAD]\n");
   myriad_n_modules = config_get_l_value("myriad_n_modules", 0, 0);
@@ -1449,6 +1808,7 @@ int main(int argc, char *argv[]){
     fprintf(stderr, "\n---- Initialization of the Modules ----\n");
     v1190_init();
     madc32_init();
+    mqdc32_init();
 
     fprintf(stderr, "------------------- Done ----------------\n");
     exit(0);
@@ -1458,6 +1818,12 @@ int main(int argc, char *argv[]){
     madc32[i]->start_acq = 0;
     madc32[i]->fifo_reset = 1;  /* FIFO Reset */
     madc32[i]->start_acq = 1;
+  }
+
+  for(i=0; i<mqdc32_n_modules; i++){
+    mqdc32[i]->start_acq = 0;
+    mqdc32[i]->fifo_reset = 1;  /* FIFO Reset */
+    mqdc32[i]->start_acq = 1;
   }
   
   if(myriad_n_modules>0){
@@ -1534,6 +1900,16 @@ int main(int argc, char *argv[]){
 
   if(madc32_close()){
     fprintf(stderr, "Error in madc32_close()\n");
+  }
+
+  for(i=0; i<mqdc32_n_modules; i++){
+    if(mqdc32_unmap(mqdc32_module_numbers[i])){
+      fprintf(stderr, "Error in mqdc32_unmap()\n");
+    }
+  }
+
+  if(mqdc32_close()){
+    fprintf(stderr, "Error in mqdc32_close()\n");
   }
 
   if(v830_exit()){
