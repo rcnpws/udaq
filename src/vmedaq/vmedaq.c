@@ -1556,9 +1556,10 @@ void mqdc32_init(){
   int nim_gat1_osc;
   int nim_fc_reset;
   int nim_busy;
-  int threshold;
+  //  int threshold;
   int ts_sources;
   int exp_trig_delay;
+  unsigned long use_ch;
 
   fprintf(stderr, "\n[MQDC32]\n");
   for(i=0; i<mqdc32_n_modules; i++){
@@ -1637,7 +1638,13 @@ void mqdc32_init(){
       fprintf(stderr, "Invalid value for mqdc32_ts_sources_ext_reset_enable: %s\n", sval);
     }
 
-    threshold      = config_get_l_value("mqdc32_threshold",      i, 0);
+    //    threshold      = config_get_l_value("mqdc32_threshold",      i, 0);
+    
+    use_ch = config_get_l_value("mqdc32_use_ch",      i, 0xffffffff);
+    for(ch=0; ch<MQDC32_NUM_CHANNELS; ch++){
+      if((use_ch>>ch)&0x00000001 == 1) fprintf(stderr, "MQDC32 ch%02d: Enable\n", ch);
+      else fprintf(stderr, "MQDC32 ch%02d: Disable\n", ch);
+    }
 
     exp_trig_delay = config_get_l_value("mqdc32_exp_trig_delay", i, 0);
 
@@ -1681,7 +1688,7 @@ void mqdc32_init(){
 	    ts_sources & MQDC32_TS_SOURCES_EXT ? "external" : "internal");
     fprintf(stderr, "  ts_sources_ext_reset_enable =       %s\n",
 	    ts_sources & MQDC32_TS_SOURCES_EXTERNAL_RESET ? "enable" : "disable");
-    fprintf(stderr, "  threshold           = %6d (%.4x)\n", threshold, threshold);
+    //    fprintf(stderr, "  threshold           = %6d (%.4x)\n", threshold, threshold);
     fprintf(stderr, "  experiment trigger delay           = %6d (%.4x)\n", exp_trig_delay, exp_trig_delay);
 
     /* ------------- initialize MQDC32  ------------ */
@@ -1698,11 +1705,12 @@ void mqdc32_init(){
     mqdc32[i]->ts_sources = ts_sources;
     
     for(ch=0; ch<MQDC32_NUM_CHANNELS; ch++){
-      mqdc32[i]->threshold[ch] = threshold;
+      if((use_ch>>ch)&0x00000001 == 1) mqdc32[i]->threshold[ch] = 0;      // enable
+      else mqdc32[i]->threshold[ch] = 0x1fff; // disable
     }
     // 20200910 for DAQ speed test
     for(ch=0; ch<4; ch++){
-      mqdc32[i]->threshold[ch] = 0;
+      //      mqdc32[i]->threshold[ch] = 0;
     }
 
     mqdc32[i]->exp_trig_delay0 = exp_trig_delay;
