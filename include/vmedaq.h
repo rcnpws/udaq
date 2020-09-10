@@ -12,6 +12,7 @@
 #define VMEDAQ_TYPE_V830                 0x00000002
 #define VMEDAQ_TYPE_COUNTER_OFFSET       0x00000003
 #define VMEDAQ_TYPE_MADC32               0x00001000
+#define VMEDAQ_TYPE_MQDC32               0x00002000
 #define VMEDAQ_TYPE_MYRIAD               0x00024000
 
 typedef struct VMEDAQ_HEADER {

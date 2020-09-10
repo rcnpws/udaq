@@ -37,24 +37,8 @@
 
 #define MQDC32_BANK_OPERATION_BANKS_CONNECTED    0
 #define MQDC32_BANK_OPERATION_BANKS_INDEPENDENT  1
-//#define MADC32_BANK_OPERATION_TOGGLE_MODE        3
 
-#define MQDC32_ADC_RESOLUTION_4K                 0   /*  always 4k resolution */
-//#define MADC32_ADC_RESOLUTION_4K_HIGH_RES        2   /*  3.2 micro sec */
-//#define MADC32_ADC_RESOLUTION_8K                 3   /*  6.4 micro sec */
-//#define MADC32_ADC_RESOLUTION_8K_HIGH_RES        4   /* 12.5 micro sec */
-
-//#define MADC32_DELAY0_25NS                       0   /* 25 ns   */
-//#define MADC32_DELAY1_25NS                       0   /* 25 ns   */
-//#define MADC32_WIDTH0_2US                       40   /*  2 us   */
-//#define MADC32_WIDTH1_2US                       40   /*  2 us   */
-//#define MADC32_USE_GG_GG0                        1   /* use GG0 */
-//#define MADC32_USE_GG_GG1                        2   /* use GG1 */
-
-//#define MADC32_INPUT_RANGE_4V                    0
-//#define MADC32_INPUT_RANGE_10V                   1
-//#define MADC32_INPUT_RANGE_8V                    2
-
+#define MQDC32_ADC_RESOLUTION_4K                 0  /*  always 4k resolution */
 #define MQDC32_INPUT_COUPLING_B0AC_B1AC          0  /* bank0:AC, bank1:AC */
 #define MQDC32_INPUT_COUPLING_B0DC_B1AC          1  /* bank0:AC, bank1:AC */
 #define MQDC32_INPUT_COUPLING_B0AC_B1DC          2  /* bank0:AC, bank1:AC */
@@ -71,8 +55,6 @@
 #define MQDC32_NIM_FC_RESET_EXP_TRIG             2  /* exp. trigger input  */
 
 #define MQDC32_NIM_BUSY_BUSY                     0  /* as busy */
-//#define MADC32_NIM_BUSY_GG0                      1  /* as gate0 output */
-//#define MADC32_NIM_BUSY_GG1                      2  /* as gate1 output */
 #define MQDC32_NIM_BUSY_CBUS                     3  /* as Cbus output  */
 #define MQDC32_NIM_BUSY_BUFFER_FULL              4  /* buffer full     */
 #define MQDC32_NIM_BUSY_DATA_THRESHOLD           8  /* data in buffer above thereshold */

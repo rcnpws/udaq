@@ -1,0 +1,394 @@
+/*
+	router_scaler.c ... Show scaler and store
+  Copyright (C) 1995  A. Tamii
+  Author:   A. Tamii
+	Facility: Department of Physics, Kyoto University 
+	          & Research Center for Nuclear Physics
+  Created:  09-JUL-1995 by A. Tamii
+	Ver 2.00  31-OCT-1995 by A. Tamii
+	Ver 2.10  30-JUN-1997 by A. Tamii
+	Ver 2.20  09-JUL-1997 by A. Tamii  (add swap for DEC-OSF1)
+*/
+
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <sys/shm.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef OSF1
+#include <strings.h>
+#endif
+#include <time.h>
+#include <errno.h>
+
+#include "router.h"
+#include "mtformat.h"
+#include "assign_j11.h"
+#include "errlog.h"
+
+#define MNOSCLRS  4
+#define MAXCH    16
+
+#define PNAMSCALER "scaler"
+
+char title[] = "Router Scaler Ver 2.2 09-JUL-1997";
+#if 0
+char title[] = "Router Scaler Ver 2.1 30-JUN-1997";
+char title[] = "Router Scaler Ver 2.0d 31-OCT-1996";
+#endif
+char *filename;
+
+char *chname[MAXCH] = {
+  /* #00 */ "B.I.", 
+  /* #01 */ "N/U", 
+  /* #02 */ "N/U", 
+  /* #03 */ "LAS Trigger", 
+  /* #04 */ "LAS Live",
+  /* #05 */ "Clock", 
+  /* #06 */ "Clock Live", 
+  /* #07 */ "C.P. Veto", 
+  /* #08 */ "LAS Bfr. Veto", 
+  /* #09 */ "LAS Trig.",
+  /* #10 */ "LAS Trig. Samp", 
+  /* #11 */ "N/U", 
+  /* #12 */ "2nd Level Samp", 
+  /* #13 */ "2nd Level Accept", 
+  /* #14 */ "2nd Level Reject", 
+  /* #15 */ "TGC Veto-1"
+};
+
+
+int scaler[MNOSCLRS][MAXCH];
+int num_scalers = 6;
+int fd_out;
+int out_interval = 10;
+int run, comment[MaxComLen];
+int blk_cnt=0;
+int data_flag=0;
+int clear_flag=0;
+
+void writestr(fd, str)
+		 int  fd;
+		 char *str;
+{
+	write(fd, str, strlen(str));
+}
+
+void show_scalers(fd)
+		 int  fd;
+{
+	int    i, j;
+  char   str[256];
+	if(fd<=0)
+		return;
+	writestr(fd, "-----------------------------------------------------------------------------\n");
+  sprintf(str, "RUN(%5d)   BLK(%8d)   '%s'\n", run, blk_cnt, comment);
+	writestr(fd, str);
+	for(j=0; j<MAXCH; j++){
+		sprintf(str, "%2d %-20s  ", j, chname[j]);
+		writestr(fd, str);
+		for(i=0; i<MNOSCLRS; i++){
+			sprintf(str, "%11d ", scaler[i][j]);
+			writestr(fd, str);
+		}
+		writestr(fd, "\n");
+	}
+	writestr("-----------------------------------------------------------------------------\n");
+}
+
+
+void do_clear_scalers(){
+	int    i, j;
+	for(i=0; i<MNOSCLRS; i++)
+		for(j=0; j<MAXCH; j++)
+			scaler[i][j] = 0;
+}
+
+void clear_scalers(){
+	if(data_flag && !clear_scalers){
+		data_flag = 0;
+		show_scalers(1);
+		show_scalers(fd_out);
+	}
+	do_clear_scalers();
+	errout(ErrComment,"Clear scalers.");
+}
+
+void get_scaler(buf, size)
+		 unsigned short *buf;
+		 int            size;
+{
+	unsigned short *ptr;
+	unsigned short *p2;
+	unsigned short *end;
+  BlkHeaderPtr  blk;
+	EvtHeaderPtr  evt;
+	FldHeaderPtr  fld;
+  int           scl;
+  unsigned short data;
+	int           i, rgn, len;
+	int           value;
+	
+	blk = (BlkHeaderPtr)buf;
+	end = &buf[size/2];
+	ptr = &buf[blk->headerSize];
+  p2 = &ptr[blk->blockSize];
+	if(p2<end) end=p2;
+	
+	scl = 0;
+	for(;ptr<end;ptr++){
+		/* search for an event header */
+		if(*ptr!=EvtHeaderID)
+			continue;
+		if(&ptr[S_EH_MIN]>end)
+			break;
+		evt = (EvtHeaderPtr)ptr;
+		if(evt->headerSize<S_EH_MIN || S_EH_MAX<evt->headerSize)
+			continue;
+		if(evt->eventID!=BlockEndEvent)
+			continue;
+		fld = (FldHeaderPtr)&ptr[evt->headerSize];
+		ptr = (unsigned short*)fld;
+		if(&ptr[S_FH_MIN]>end)
+			break;
+		if(fld->headerID!=FldHeaderID)
+			continue;
+		if(fld->headerSize<S_FH_MIN || S_FH_MAX<fld->headerSize)
+			continue;
+		ptr = &ptr[fld->headerSize];
+    p2 = &ptr[fld->fieldSize];
+		if(p2>end) p2=end;
+		while(ptr<p2){
+			data = *ptr++;
+			rgn = data&ModuleIDMask;
+			len = data&DataLengthMask;
+			if(rgn!=ID_Scaler){
+				ptr += len;
+				continue;
+			}
+			len >>= 1;
+			if(len>MAXCH) len = MAXCH;
+			for(i=0; i<len; i++){
+				if(ptr>=p2)
+					break;
+				value = *ptr++;
+				value += *ptr++ <<16;
+				scaler[scl][i] += value;
+			}
+		scl++;
+		}
+	}
+}
+
+void read_buf(buf, size)
+		 unsigned short *buf;
+		 int            size;
+{
+	static int out_count=0;
+	int    id;
+	int    cnt;
+	char   str[256];
+	id = assign_j11(buf, size, &cnt, str);
+	if(id&BLK_UNKNOWN){
+#if 0
+		errout(ErrVoid,"Unknown Block Format");
+#endif
+		return;
+	}
+	if(id&BLK_START){
+		errout(ErrComment, "Run Start Block ... Run #%d, %s", cnt, str);
+		blk_cnt = 0;
+    run = cnt;
+		strncpy((char*)comment, str, MaxComLen);
+		clear_scalers();
+	}
+	if(id&BLK_END){
+		errout(ErrComment, "Run End Block ... Run #%d, %s", cnt, str);
+		show_scalers(1);
+		show_scalers(fd_out);
+		data_flag = 0;
+#if 0
+		errout(ErrComment, "Total %d Data Blocks", blk_cnt);
+#endif
+	}
+	if(id&BLK_MIDDLE){
+		errout(ErrComment, "Run Middle Block");
+	}
+	if(id&(BLK_DATA|BLK_SCALER)){
+#if 0
+		if(id&BLK_DATA)
+#endif
+			blk_cnt++;
+		get_scaler(buf, size);
+		if(++out_count>=out_interval){
+			out_count = 0;
+			show_scalers(1);
+			if(clear_flag)
+				do_clear_scalers();
+		}
+		data_flag = 1;
+	}
+}
+
+void usage(){
+	fprintf(stderr, "%s\n", title);
+	fprintf(stderr, "%s ... show scalers in buffers from a router\n", filename);
+	fprintf(stderr, "Usage: %s [-c] [-i interval] router [file_name]\n",
+					filename);
+	fprintf(stderr, "  -c         ... clear scalers when output\n");
+	fprintf(stderr, "  -i         ... set output interval (default=%d)\n",
+					out_interval);
+	fprintf(stderr, "  router     ... name of the target router\n");
+	fprintf(stderr, "  file_name  ... file name to save scaler data\n");
+}
+
+main(argc, argv)
+		int    argc;
+		 char   *argv[];
+{
+	int    res;
+	char   *buf, *data;
+	long   size;
+	int    i, n;
+	char   *zero;
+	int    fd_read;
+  short  swap;
+	char   *bufs;
+	
+	filename = argv[0];
+
+  argc--;
+	argv++;
+
+  swap = (ntohl(0x01020304)!=0x01020304);
+
+	while(argc>0){
+		if(**argv!='-')break;
+		if(strlen(*argv)==2){
+			switch((*argv)[1]){
+			case 'h':
+			case 'H':
+				usage();
+				exit(0);
+			case 'c':
+				clear_flag = 1;
+				break;
+			case 'i':
+				argc--;
+				argv++;
+				if(argc<=0){
+					fprintf(stderr, "No argument for -i\n");
+					usage();
+					exit(1);
+				}
+				out_interval = atoi(*argv);
+				if(out_interval<=0){
+					fprintf(stderr, "Illegal argument for -i\n");
+					usage();
+					exit(1);
+				}
+				break;
+			default:
+				fprintf(stderr, "Illegal argument '%s'\n", *argv);
+				usage();
+				exit(1);
+			}
+		}else{
+			fprintf(stderr, "Illegal argument '%s'\n", *argv);
+			usage();
+			exit(1);
+		}
+		argc--;
+		argv++;
+	}
+
+	if(argc<1 || 2<argc){
+		fprintf(stderr, "Too many or too few arguments\n", *argv);
+		usage();
+		exit(1);
+	}
+
+  /* Open Error Log */
+	errlog_open(PNAMSCALER);
+
+  /* show title */
+	errout(ErrMessage, "%s\n", title);
+	if(strlen(argv[0])>4) argv[0][4] = 0x00;
+	errout(ErrComment, "Connect to router '%s'.\n", argv[0]);
+
+	/* Make Connection to Router */
+	fd_read = router_connect(argv[0], getuid(), filename, 0);
+  if(fd_read<0){
+		perror("router_connect");
+		errout(ErrSever, "Terminate Recorder Process.");
+		exit(1);
+	}
+	
+	/* Open File to Save */
+	fd_out = 0;
+	if(argc>=2){
+		fd_out  = open(argv[1], O_WRONLY|O_CREAT|O_APPEND, 0666);
+		if(fd_out==-1){
+			errout(ErrSever, "Error on opening file: %s\n", argv[1]);
+			perror("open");
+			router_disconnect(fd_read);
+			exit(1);
+		}
+		errout(ErrComment, "Output file: %s\n", argv[1]);
+	}
+
+  errout(ErrMessage, "Output file=%s", fd_out==0 ? "NONE" : argv[1]);
+	if(fd_out==0){
+		errout(ErrWarning, "No output file is selected.");
+	}
+	
+	clear_scalers();
+	while(TRUE){
+		res = router_get_buf(fd_read, &buf, &size);
+		if(res){
+			perror("router_get_buf");
+			break;
+		}
+    if(swap){
+      bufs = (char*)malloc((size+0x4000)&0xFFFFFFF0);
+      if(bufs==(char*)NULL){
+				errout(ErrSever, "Could not allocate memory.");
+				break;
+			}
+      swab(buf, bufs, size);
+  		read_buf(bufs, size); 
+			free(bufs);
+		}else{
+  		read_buf(buf, size);
+		}
+		res = router_release_buf(fd_read, buf, size);
+		if(res){
+			perror("router_release_buf");
+			break;
+		}
+	}
+	router_disconnect(fd_read);
+	errlog_close();
+	close(fd_out);
+	errout(ErrMessage, "Terminate scaler program.");
+}
+
+/* output message */
+errout(type,str,data1,data2,data3,data4)
+		 int  type;
+		 char *str;
+		 long data1, data2, data3, data4;
+{
+	char fmt[256];
+	char text[256];
+	strcpy(fmt, str);
+	strcat(fmt, "\n");
+  sprintf(text, fmt, data1, data2, data3, data4);
+	fprintf(stderr, text);
+	if(fd_out>0)
+		writestr(fd_out, text);
+  sprintf(text, str, data1, data2, data3, data4);
+	errlog_msg(type, text);
+}

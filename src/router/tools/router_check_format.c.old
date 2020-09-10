@@ -1,0 +1,107 @@
+/*
+	check_format.c ... check the format of buffers
+  Copyright (C) 1995  A. Tamii
+  Author:   A. Tamii
+	Facility: Department of Physics, Kyoto University 
+	          & Research Center for Nuclear Physics
+  Created:  06-APR-1995 by A. Tamii
+*/
+
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <sys/shm.h>
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef OSF1
+#include <strings.h>
+#endif
+#include <time.h>
+#include <errno.h>
+#include <mtformat.h>
+
+#include "router.h"
+
+extern int base;
+
+main(argc, argv)
+		 int    argc;
+		 char   *argv[];
+{
+	int    res;
+	char   *buf, *data;
+	int    size;
+	int    i, n;
+  int    cnt, disp;
+  char   name[60];
+  int    flag;
+	
+	if(argc<2){
+		fprintf(stderr, "%s ... check the format of the buffers received from the router\n", argv[0]);
+		fprintf(stderr, "  Usage: %s [-s] stream_num [status_display_interval]\n", argv[0]);
+    fprintf(stderr, "  -s     ... sampling read from router\n");
+    fprintf(stderr, "  stream ... target stream number\n");
+		exit(1);
+	}
+
+  strcpy(name, argv[0]);
+  argv++;
+  argc--;
+	
+	flag = 0;
+  if(argc>0 && !strcmp(*argv,"-s")){
+		flag |= O_SAMPLE;
+		argv++;
+	  argc--;
+	}
+
+  if(argc<=0){
+		printf("Error in arguments.\n");
+		exit(1);
+	}
+	n = atoi(*argv++);
+  argc--;
+  fprintf(stderr, "Check format of buffers from the stream #%d\n", n);
+  if(flag&O_SAMPLE)
+    fprintf(stderr, "Sampling Mode\n");
+	
+  if(argc>0){
+		disp = atoi(*argv);
+		argc--;
+	}
+	else
+		disp = 1;
+	
+	/* Make Connection to Router */
+	res = router_connect(0, n, name, flag);
+  if(res){
+		perror("router_connect");
+		exit(1);
+	}
+
+	/* clear counters */
+	clear_counters();
+  cnt = 0;
+	
+	while(TRUE){
+		res = router_get_buf(&buf, &size);
+		if(res){
+			perror("router_get_buf");
+			break;
+		}
+		base = (long)buf;
+		check_buf(buf, size/2);
+		if((--cnt)<=0){
+			show_counters();
+			cnt = disp;
+		}
+		res = router_release_buf(buf);
+		if(res){
+			perror("router_get_buf");
+			break;
+		}
+	}
+	router_disconnect();
+	show_counters();
+}
+

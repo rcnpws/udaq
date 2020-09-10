@@ -1,0 +1,109 @@
+/*
+	router_cat.c ... Cat the  buffer from router
+  Copyright (C) 1995  A. Tamii
+  Author:   A. Tamii
+	Facility: Department of Physics, Kyoto University 
+	          & Research Center for Nuclear Physics
+  Created:  08-FEB-1995 by A. Tamii (for Solaris 2.3)
+	Ver 2.00  31-OCT-1995 by A. Tamii
+*/
+
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <sys/shm.h>
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef OSF1
+#include <strings.h>
+#endif
+#include <time.h>
+#include <errno.h>
+
+#include "router.h"
+
+char title[] = "Router Cat Ver 2.0d 30-OCT-1996";
+char *filename;
+
+void usage(){
+	fprintf(stderr, "%s\n", title);
+	fprintf(stderr, "  ... cat buffers from router\n", filename);
+	fprintf(stderr, "Usage: %s router \n", filename);
+  fprintf(stderr, "       router ... name of the router\n");
+}
+
+main(argc, argv)
+		 int    argc;
+		 char   *argv[];
+{
+	int    fd;
+	int    res;
+	char   *buf, *data;
+	long   size;
+	int    i, n;
+	
+	filename = argv[0];
+
+  argc--;
+	argv++;
+
+	while(argc>0){
+		if(**argv!='-')break;
+		if(strlen(*argv)==2){
+			switch((*argv)[1]){
+			case 'h':
+			case 'H':
+				usage();
+				exit(0);
+			default:
+				fprintf(stderr, "Illegal argument '%s'\n", *argv);
+				usage();
+				exit(1);
+			}
+		}else{
+			fprintf(stderr, "Illegal argument '%s'\n", *argv);
+			usage();
+			exit(1);
+		}
+		argc--;
+		argv++;
+	}
+
+	if(argc<1 || 1<argc){
+		fprintf(stderr, "Too many or too few arguments\n", *argv);
+		usage();
+		exit(1);
+	}
+
+  /* show title */
+	fprintf(stderr, "%s\n", title);
+	if(strlen(argv[0])>4) argv[0][4] = 0x00;
+	fprintf(stderr, "Connect to router '%s'.\n", argv[0]);
+
+	/* Make Connection to Router */
+#if 0
+	fd = router_connect(argv[0], filename, NULL);
+#else
+	fd = router_connect(argv[0], getuid(), filename, O_SAMPLE);
+#endif
+  if(fd<0){
+		perror("router_connect");
+		exit(1);
+	}
+	
+	while(TRUE){
+		res = router_get_buf(fd, &buf, &size);
+		if(res){
+			perror("router_get_buf");
+			break;
+		}
+		write(1, buf, size);    /* write to the standard output */
+		res = router_release_buf(fd, buf, size);
+		if(res){
+			perror("router_get_buf");
+			break;
+		}
+	}
+	router_disconnect(fd);
+}
+
